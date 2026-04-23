@@ -1,70 +1,74 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <fstream>  
-using namespace std;
-class Panier; 
-// ==========================================
-// 1. CLASSE ABSTRAITE DE BASE : 
-// ==========================================
-class Produit {
-protected: 
-    string nom;
-    double prixBase;
-    int stock;
 
-public:
-    Produit(string n, double p, int s) : nom(n), prixBase(p), stock(s) {}
-    virtual ~Produit() {} 
+# HONAA AL CODE 
 
-    string getNom() const { return nom; }
-    int getStock() const { return stock; }
-    void retirerStock(int quantite) {
+    #include <iostream>
+    #include <string>
+    #include <vector>
+    #include <fstream>  
+    using namespace std;
+    class Panier; 
+    // ==========================================
+    // 1. CLASSE ABSTRAITE DE BASE : 
+    // ==========================================
+    class Produit {
+
+      protected: 
+         string nom;
+         double prixBase;
+         int stock;
+
+    public:
+       Produit(string n, double p, int s) : nom(n), prixBase(p), stock(s) {}
+       virtual ~Produit() {} 
+
+       string getNom() const { return nom; }
+       int getStock() const { return stock; }
+       void retirerStock(int quantite) {
         stock -= quantite;
         if (stock <= 0) {
             cout << "   [ALERTE] Rupture de stock pour [" << nom << "] !" << endl;
-        }
-    }
-    virtual double calculerPrixFinal() const = 0; 
-    virtual double calculerSimilarite(const Panier& p) const = 0; 
-    virtual void afficher() const {
+         }
+      }
+      virtual double calculerPrixFinal() const = 0; 
+      virtual double calculerSimilarite(const Panier& p) const = 0; 
+      virtual void afficher() const {
         cout << nom << " | Prix Base: " << prixBase << " EUR | Stock: " << stock;
-    }
-};
-// ==========================================
-// 2. CLASSES DÉRIVÉES (CATALOGUE) 
-// ==========================================
-class Electronique : public Produit {
-public:
-    Electronique(string n, double p, int s) : Produit(n, p, s) {}
-    double calculerPrixFinal() const override { return prixBase * 1.20; } // TVA 20% 
-    double calculerSimilarite(const Panier& p) const override { return 85.0; } // [cite: 34]
-};
+      }
+    };
+    // ==========================================
+    // 2. CLASSES DÉRIVÉES (CATALOGUE) 
+    // ==========================================
+    class Electronique : public Produit {
+     public:
+       Electronique(string n, double p, int s) : Produit(n, p, s) {}
+       double calculerPrixFinal() const override { return prixBase * 1.20; } // TVA 20% 
+       double calculerSimilarite(const Panier& p) const override { return 85.0; } // [cite: 34]
+    };
 
-class Alimentaire : public Produit {
-public:
-    Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
-    double calculerPrixFinal() const override { return prixBase * 1.055; } // TVA 5.5% 
-    double calculerSimilarite(const Panier& p) const override { return 30.0; } // [cite: 34]
-};
+       class Alimentaire : public Produit {
+    public:
+       Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
+       double calculerPrixFinal() const override { return prixBase * 1.055; } // TVA 5.5% 
+       double calculerSimilarite(const Panier& p) const override { return 30.0; } // [cite: 34]
+    };
 
-class Vetement : public Produit {
-public:
-    Vetement(string n, double p, int s) : Produit(n, p, s) {}
-    double calculerPrixFinal() const override { return prixBase * 1.10; } 
-    double calculerSimilarite(const Panier& p) const override { return 60.0; } 
-};
+     class Vetement : public Produit {
+     public:
+      Vetement(string n, double p, int s) : Produit(n, p, s) {}
+      double calculerPrixFinal() const override { return prixBase * 1.10; } 
+      double calculerSimilarite(const Panier& p) const override { return 60.0; } 
+     };
 
-// ========================================
-// 3. GESTION DU PANIER 
-// ==========================================
-class Panier {
-private:
+    // ========================================
+    // 3. GESTION DU PANIER 
+    // ==========================================
+    class Panier {
+    private:
     Produit** articles;
     int nbArticles;
     int capaciteMax;
 
-public:
+    public:
     Panier(int cap) : nbArticles(0), capaciteMax(cap) {
         articles = new Produit*[capaciteMax]; 
     }
@@ -102,13 +106,13 @@ public:
             cout << "- " << articles[i]->getNom() << " : " << articles[i]->calculerPrixFinal() << " DH" << endl;
         }
         cout << "TOTAL (TTC + Remises): " << calculerMontantTotal() << " DH" << endl;
-    }
-};
+       }
+    };
 
-// ==========================================
-// 4. PROGRAMME PRINCIPAL
-// ==========================================
-int main() {
+    // ==========================================
+    // 4. PROGRAMME PRINCIPAL
+    // ==========================================
+    int main() {
     const int nbProduits = 3;
     Produit* catalogue[nbProduits]; 
 
@@ -128,8 +132,8 @@ int main() {
         }
         fichier.close();
         cout << "   [OK] Catalogue enregistré avec succès !" << endl;
+      }
     }
-}
 
     while (choix != 0) {
         cout << "\n=========== MENU E-COMMERCE  ===========" << endl;
@@ -172,4 +176,4 @@ int main() {
 
     for(int i = 0; i < nbProduits; i++) delete catalogue[i];
     return 0;
-}
+    }
