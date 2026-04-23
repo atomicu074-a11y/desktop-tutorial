@@ -1,4 +1,3 @@
-# Welcome to GitHub 
 #include <iostream>
 #include <string>
 #include <vector>
@@ -17,6 +16,7 @@ protected:
 public:
     Produit(string n, double p, int s) : nom(n), prixBase(p), stock(s) {}
     virtual ~Produit() {} 
+
     string getNom() const { return nom; }
     int getStock() const { return stock; }
     void retirerStock(int quantite) {
@@ -68,9 +68,12 @@ public:
     Panier(int cap) : nbArticles(0), capaciteMax(cap) {
         articles = new Produit*[capaciteMax]; 
     }
+
     ~Panier() { delete [] articles; }
+
     int getNbArticles() const { return nbArticles; }
     Produit* getArticle(int i) const { return articles[i]; }
+
     void ajouterProduit(Produit* p) {
         if (nbArticles < capaciteMax && p->getStock() > 0) {
             articles[nbArticles++] = p;
@@ -88,6 +91,7 @@ public:
         if (total > 500) total *= 0.95; 
         return total;
     }
+
     void afficherFacture() const {
         cout << "\n--- VOTRE FACTURE  ---" << endl;
         if (nbArticles == 0) {
@@ -107,9 +111,11 @@ public:
 int main() {
     const int nbProduits = 3;
     Produit* catalogue[nbProduits]; 
+
     catalogue[0] = new Electronique("Smartphone X", 800.0, 2);
     catalogue[1] = new Alimentaire("Pommes Bio", 3.0, 10);
     catalogue[2] = new Vetement("T-Shirt C++", 25.0, 5);
+
     Panier monPanier(10);
     vector<string> historique;
     int choix = -1;
@@ -124,6 +130,7 @@ int main() {
         cout << "   [OK] Catalogue enregistré avec succès !" << endl;
     }
 }
+
     while (choix != 0) {
         cout << "\n=========== MENU E-COMMERCE  ===========" << endl;
         cout << "1. Voir le catalogue" << endl;
@@ -134,6 +141,7 @@ int main() {
         cout << "0. Valider et Quitter" << endl;
         cout << "Votre choix : ";
         cin >> choix;
+
         if (choix == 1) {
             for (int i = 0; i < nbProduits; i++) {
                 cout << i + 1 << ". "; catalogue[i]->afficher(); cout << endl;
@@ -161,6 +169,7 @@ int main() {
             historique.push_back("Commande de " + to_string(monPanier.calculerMontantTotal()) + " DH");
         }
     }
+
     for(int i = 0; i < nbProduits; i++) delete catalogue[i];
     return 0;
 }
