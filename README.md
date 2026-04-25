@@ -32,7 +32,7 @@
       virtual double calculerPrixFinal() const = 0; 
       virtual double calculerSimilarite(const Panier& p) const = 0; 
       virtual void afficher() const {
-        cout << nom << " | Prix Base: " << prixBase << " EUR | Stock: " << stock;
+        cout << nom << " | Prix Base: " << prixBase << " DH | Stock: " << stock;
       }
     };
     // ==========================================
@@ -41,15 +41,15 @@
     class Electronique : public Produit {
      public:
        Electronique(string n, double p, int s) : Produit(n, p, s) {}
-       double calculerPrixFinal() const override { return prixBase * 1.20; } // TVA 20% 
-       double calculerSimilarite(const Panier& p) const override { return 85.0; } // [cite: 34]
+       double calculerPrixFinal() const override { return prixBase * 1.20; } 
+       double calculerSimilarite(const Panier& p) const override { return 85.0; } 
     };
 
        class Alimentaire : public Produit {
     public:
        Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
-       double calculerPrixFinal() const override { return prixBase * 1.055; } // TVA 5.5% 
-       double calculerSimilarite(const Panier& p) const override { return 30.0; } // [cite: 34]
+       double calculerPrixFinal() const override { return prixBase * 1.055; } 
+       double calculerSimilarite(const Panier& p) const override { return 30.0; } 
     };
 
      class Vetement : public Produit {
