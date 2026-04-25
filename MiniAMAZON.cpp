@@ -1,176 +1,205 @@
+
+
+// ==========================================
+// راني حرقة خلايا دماغي باش نخرج ليكم هاد التحفه 😌✨
+// ==========================================
 #include <iostream>
 #include <string>
 #include <vector>
-#include <fstream>  
+#include <fstream>
+
 using namespace std;
-class Panier; 
+
+class Panier;
+
 // ==========================================
-// 1. CLASSE ABSTRAITE DE BASE : 
+// 1. CLASSE  DE BASE
 // ==========================================
 class Produit {
-
-  protected: 
-     string nom;
-     double prixBase;
-     int stock;
+protected:
+    string nom;
+    double prixBase;
+    int stock;
 
 public:
-   Produit(string n, double p, int s) : nom(n), prixBase(p), stock(s) {}
-   virtual ~Produit() {} 
+    Produit(string n, double p, int s) : nom(n), prixBase(p), stock(s) {}
+    virtual ~Produit() {}
 
-   string getNom() const { return nom; }
-   int getStock() const { return stock; }
-   void retirerStock(int quantite) {
-    stock -= quantite;
-    if (stock <= 0) {
-        cout << "   [ALERTE] Rupture de stock pour [" << nom << "] !" << endl;
-     }
-  }
-  virtual double calculerPrixFinal() const = 0; 
-  virtual double calculerSimilarite(const Panier& p) const = 0; 
-  virtual void afficher() const {
-    cout << nom << " | Prix Base: " << prixBase << " DH | Stock: " << stock;
-  }
+    string getNom() const { return nom; }
+    int getStock() const { return stock; }
+    
+    void retirerStock(int quantite) {
+        stock -= quantite;
+        if (stock <= 0) {
+            cout << "   [ALERTE] Rupture de stock pour [" << nom << "] !" << endl;
+        }
+    }
+
+    virtual double calculerPrixFinal() const = 0;
+    virtual double calculerSimilarite(const Panier& p) const = 0;
+    
+    virtual void afficher() const {
+        cout << nom << " | Prix Base: " << prixBase << " DH | Stock: " << stock;
+    }
+    virtual string getType() const = 0;
 };
+
 // ==========================================
-// 2. CLASSES DÉRIVÉES (CATALOGUE) 
+// 2. CLASSES DES ITMES
 // ==========================================
 class Electronique : public Produit {
- public:
-   Electronique(string n, double p, int s) : Produit(n, p, s) {}
-   double calculerPrixFinal() const override { return prixBase * 1.20; } 
-   double calculerSimilarite(const Panier& p) const override { return 85.0; } 
-};
-
-   class Alimentaire : public Produit {
 public:
-   Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
-   double calculerPrixFinal() const override { return prixBase * 1.055; } 
-   double calculerSimilarite(const Panier& p) const override { return 30.0; } 
+    Electronique(string n, double p, int s) : Produit(n, p, s) {}
+    double calculerPrixFinal() const override { return prixBase * 1.20; }
+    double calculerSimilarite(const Panier& p) const override { return 85.0; }
+    string getType() const override { return "Electronique"; }
 };
 
- class Vetement : public Produit {
- public:
-  Vetement(string n, double p, int s) : Produit(n, p, s) {}
-  double calculerPrixFinal() const override { return prixBase * 1.10; } 
-  double calculerSimilarite(const Panier& p) const override { return 60.0; } 
- };
+class Alimentaire : public Produit {
+public:
+    Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
+    double calculerPrixFinal() const override { return prixBase * 1.055; }
+    double calculerSimilarite(const Panier& p) const override { return 30.0; }
+    string getType() const override { return "Alimentaire"; }
+    
+};
+
+class Vetement : public Produit {
+public:
+    Vetement(string n, double p, int s) : Produit(n, p, s) {}
+    double calculerPrixFinal() const override { return prixBase * 1.10; }
+    double calculerSimilarite(const Panier& p) const override { return 60.0; }
+    string getType() const override { return "Vetement"; }
+};
 
 // ========================================
-// 3. GESTION DU PANIER 
+// 3. GESTION DU PANIER
 // ==========================================
 class Panier {
 private:
-Produit** articles;
-int nbArticles;
-int capaciteMax;
+    vector<Produit*> articles; 
 
 public:
-Panier(int cap) : nbArticles(0), capaciteMax(cap) {
-    articles = new Produit*[capaciteMax]; 
-}
-
-~Panier() { delete [] articles; }
-
-int getNbArticles() const { return nbArticles; }
-Produit* getArticle(int i) const { return articles[i]; }
-
-void ajouterProduit(Produit* p) {
-    if (nbArticles < capaciteMax && p->getStock() > 0) {
-        articles[nbArticles++] = p;
-        p->retirerStock(1); 
-        cout << "-> Ajoute: " << p->getNom() << endl;
-    } else {
-        cout << "-> Erreur: Stock épuisé ou Panier plein !" << endl;
+    void ajouterProduit(Produit* p) {
+        if (p->getStock() > 0) {
+            articles.push_back(p);
+            p->retirerStock(1);
+            cout << "-> Ajoute: " << p->getNom() << endl;
+        } else {
+            cout << "-> Erreur: Stock épuisé !" << endl;
+        }
     }
-}
-double calculerMontantTotal() const {
-    double total = 0;
-    for (int i = 0; i < nbArticles; i++) {
-        total += articles[i]->calculerPrixFinal();
-    }
-    if (total > 500) total *= 0.95; 
-    return total;
-}
 
-void afficherFacture() const {
-    cout << "\n--- VOTRE FACTURE  ---" << endl;
-    if (nbArticles == 0) {
-        cout << "Panier vide." << endl;
-        return;
+    double calculerMontantTotal() const {
+        double total = 0;
+        for (Produit* p : articles) {
+            total += p->calculerPrixFinal();
+        }
+        if (total > 500) total *= 0.95; 
+        return total;
     }
-    for (int i = 0; i < nbArticles; i++) {
-        cout << "- " << articles[i]->getNom() << " : " << articles[i]->calculerPrixFinal() << " DH" << endl;
+
+    int getNbArticles() const { return articles.size(); }
+
+    void afficherFacture() const {
+        cout << "\n--- VOTRE FACTURE ---" << endl;
+        if (articles.empty()) {
+            cout << "Panier vide." << endl;
+            return;
+        }
+        for (Produit* p : articles) {
+            cout << "- " << p->getNom() << " : " << p->calculerPrixFinal() << " DH" << endl;
+        }
+        cout << "TOTAL (TTC + Remises): " << calculerMontantTotal() << " DH" << endl;
     }
-    cout << "TOTAL (TTC + Remises): " << calculerMontantTotal() << " DH" << endl;
-   }
 };
 
 // ==========================================
-// 4. PROGRAMME PRINCIPAL
+// 4. FONCTIONS creer UN Produit
+// ==========================================
+Produit* creerNouveauProduit() {
+    string nom; double prix; int stock, type;
+    cout << "\n--- ESPACE VENDEUR ---" << endl;
+    cout << "1. Electronique | 2. Alimentaire | 3. Vetement : ";
+    cin >> type;
+    cout << "Nom : "; cin.ignore(); getline(cin, nom);
+    cout << "Prix : "; cin >> prix;
+    cout << "Stock : "; cin >> stock;
+
+    if (type == 1) return new Electronique(nom, prix, stock);
+    if (type == 2) return new Alimentaire(nom, prix, stock);
+    if (type == 3) return new Vetement(nom, prix, stock);
+    return nullptr;
+}
+
+void sauvegarderCatalogue(const vector<Produit*>& catalogue) {
+    ofstream fichier("catalogue.txt");
+    if (fichier.is_open()) {
+        for (Produit* p : catalogue) {
+            fichier << p->getNom() << " " << p->getStock() << endl;
+        }
+        fichier.close();
+        cout << "   [OK] Catalogue enregistré !" << endl;
+    }
+}
+
+// ==========================================
+// 5. PROGRAMME PRINCIPAL
 // ==========================================
 int main() {
-const int nbProduits = 3;
-Produit* catalogue[nbProduits]; 
+    vector<Produit*> catalogue;
+    catalogue.push_back(new Electronique("Smartphone X", 800.0, 2));
+    catalogue.push_back(new Alimentaire("Pommes Bio", 3.0, 10));
+    catalogue.push_back(new Vetement("T-Shirt C++", 25.0, 5));
 
-catalogue[0] = new Electronique("Smartphone X", 800.0, 2);
-catalogue[1] = new Alimentaire("Pommes Bio", 3.0, 10);
-catalogue[2] = new Vetement("T-Shirt C++", 25.0, 5);
+    Panier monPanier;
+    vector<string> historique;
+    int choix = -1;
 
-Panier monPanier(10);
-vector<string> historique;
-int choix = -1;
-void sauvegarderCatalogue(Produit* catalogue[], int taille) ;{
-ofstream fichier("catalogue.txt"); 
-if (fichier.is_open()) {
-    for (int i = 0; i < nbProduits; i++) {
-        fichier << catalogue[i]->getNom() << " " 
-                << " " << catalogue[i]->getStock() << endl;
-    }
-    fichier.close();
-    cout << "   [OK] Catalogue enregistré avec succès !" << endl;
-  }
-}
+    while (choix != 0) {
+        cout << "\n=========== MENU E-COMMERCE ===========" << endl;
+        cout << "1. Voir catalogue\n2. Ajouter au panier\n3. Voir facture\n4. Recommandations\n5. ESPACE VENDEUR\n6. Historique\n0. Quitter" << endl;
+        cout << "Votre choix : "; cin >> choix;
 
-while (choix != 0) {
-    cout << "\n=========== MENU E-COMMERCE  ===========" << endl;
-    cout << "1. Voir le catalogue" << endl;
-    cout << "2. Ajouter au panier" << endl;
-    cout << "3. Voir facture et total" << endl;
-    cout << "4. Recommandations (Challenge) " << endl;
-    cout << "5. Voir l'historique des commandes " << endl;
-    cout << "0. Valider et Quitter" << endl;
-    cout << "Votre choix : ";
-    cin >> choix;
+        if (choix == 1) {
+            int cat;
+            cout << "Choisir catégorie (1: Electronique, 2: Alimentaire, 3: Vetement) : ";
+            cin >> cat;
+            string cible = (cat == 1) ? "Electronique" : (cat == 2) ? "Alimentaire" : "Vetement";
 
-    if (choix == 1) {
-        for (int i = 0; i < nbProduits; i++) {
-            cout << i + 1 << ". "; catalogue[i]->afficher(); cout << endl;
-        }
-    } 
-    else if (choix == 2) {
-        int id; cout << "ID (1-" << nbProduits << "): "; cin >> id;
-        if (id >= 1 && id <= nbProduits) monPanier.ajouterProduit(catalogue[id-1]);
-    } 
-    else if (choix == 3) {
-        monPanier.afficherFacture();
-    } 
-    else if (choix == 4) {
-        cout << "\n--- RECOMMANDATIONS  ---" << endl;
-        for (int i = 0; i < nbProduits; i++) {
-            cout << "Score pour [" << catalogue[i]->getNom() << "] : " 
-                 << catalogue[i]->calculerSimilarite(monPanier) << " %" << endl;
+    cout << "\n--- AFFICHAGE : " << cible << " ---" << endl;
+    for (Produit* p : catalogue) {
+        if (p->getType() == cible) {
+            p->afficher();
+            cout << endl;
         }
     }
-    else if (choix == 5) {
-        cout << "\n--- HISTORIQUE  ---" << endl;
-        for (const string& cmd : historique) cout << cmd << endl;
+        } 
+        else if (choix == 2) {
+            int id; cout << "ID (1-" << catalogue.size() << "): "; cin >> id;
+            if (id >= 1 && (size_t)id <= catalogue.size()) monPanier.ajouterProduit(catalogue[id-1]);
+        } 
+        else if (choix == 3) monPanier.afficherFacture();
+        else if (choix == 4) {
+            cout << "\n--- RECOMMANDATIONS ---" << endl;
+            for (Produit* p : catalogue) {
+                cout << "Score [" << p->getNom() << "] : " << p->calculerSimilarite(monPanier) << " %" << endl;
+            }
+        }
+        else if (choix == 5) {
+            Produit* nouveau = creerNouveauProduit();
+            if (nouveau) catalogue.push_back(nouveau);
+        }
+        else if (choix == 6) {
+            for (const string& s : historique) cout << s << endl;
+        }
+        else if (choix == 0 && monPanier.getNbArticles() > 0) {
+            historique.push_back("Commande de " + to_string(monPanier.calculerMontantTotal()) + " DH");
+            sauvegarderCatalogue(catalogue);
+        }
+        
+        }for(Produit* p : catalogue) delete p;
+    return 0;
     }
-    else if (choix == 0 && monPanier.getNbArticles() > 0) {
-        historique.push_back("Commande de " + to_string(monPanier.calculerMontantTotal()) + " DH");
-    }
-}
 
-for(int i = 0; i < nbProduits; i++) delete catalogue[i];
-return 0;
-}
+    
