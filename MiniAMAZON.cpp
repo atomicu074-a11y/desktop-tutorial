@@ -1,8 +1,6 @@
 
 
-// ==========================================
-// راني حرقة خلايا دماغي باش نخرج ليكم هاد التحفه 😌✨
-// ==========================================
+// bravo l'équipe 
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,9 +10,7 @@ using namespace std;
 
 class Panier;
 
-// ==========================================
-// 1. CLASSE  DE BASE
-// ==========================================
+// classe de base
 class Produit {
 protected:
     string nom;
@@ -44,9 +40,7 @@ public:
     virtual string getType() const = 0;
 };
 
-// ==========================================
-// 2. CLASSES DES ITMES
-// ==========================================
+//classe de items
 class Electronique : public Produit {
 public:
     Electronique(string n, double p, int s) : Produit(n, p, s) {}
@@ -72,9 +66,7 @@ public:
     string getType() const override { return "Vetement"; }
 };
 
-// ========================================
-// 3. GESTION DU PANIER
-// ==========================================
+// gestion de panier
 class Panier {
 private:
     vector<Produit*> articles; 
@@ -114,9 +106,7 @@ public:
     }
 };
 
-// ==========================================
-// 4. FONCTIONS creer UN Produit
-// ==========================================
+//des fonctions cree un produit
 Produit* creerNouveauProduit() {
     string nom; double prix; int stock, type;
     cout << "\n--- ESPACE VENDEUR ---" << endl;
@@ -143,9 +133,7 @@ void sauvegarderCatalogue(const vector<Produit*>& catalogue) {
     }
 }
 
-// ==========================================
-// 5. PROGRAMME PRINCIPAL
-// ==========================================
+// programme principale
 int main() {
     vector<Produit*> catalogue;
     catalogue.push_back(new Electronique("Smartphone X", 800.0, 2));
