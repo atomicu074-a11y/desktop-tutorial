@@ -1,5 +1,8 @@
 
 
+// تم و بحمد الله إكمال هذا الكود 🙂, gestion des erreurs دراتهم و داكشي الي ناقص درتو و les commentaires مقادين اوكون غير نقدرو نديرو أوديو في هاد git huB 🗿
+
+
 // bravo l'équipe 
 #include <iostream>
 #include <string>
@@ -106,20 +109,78 @@ public:
     }
 };
 
-//des fonctions cree un produit
+// Fonction utilitaire pour sécuriser les entiers
+int saisirEntier(string message) {
+    int n;
+    while (true) {
+        cout << message;
+        if (cin >> n) return n;
+        else {
+            cout << "   [ERREUR] Saisie invalide ! Veuillez entrer un nombre." << endl;
+            cin.clear();
+            cin.ignore(1000, '\n'); 
+        }
+    }
+}
+
 Produit* creerNouveauProduit() {
-    string nom; double prix; int stock, type;
+    string nom;
+    double prix;
+    int stock, type;
+
     cout << "\n--- ESPACE VENDEUR ---" << endl;
     cout << "1. Electronique | 2. Alimentaire | 3. Vetement : ";
     cin >> type;
-    cout << "Nom : "; cin.ignore(); getline(cin, nom);
-    cout << "Prix : "; cin >> prix;
-    cout << "Stock : "; cin >> stock;
+    cin.ignore(); 
+    cout << "Nom : "; getline(cin, nom);
 
+    //  Vérification que PRIX est un nombre
+    while (true) {
+        cout << "Prix : ";
+        if (cin >> prix) {
+            break; 
+        } else {
+            cout << "   [ERREUR] Le prix doit etre un nombre (ex: 10.5). Reessayez." << endl;
+            cin.clear();
+            cin.ignore(1000, '\n'); 
+        }
+    }
+
+    // Vérification que STOCK est un entier
+    while (true) {
+        cout << "Stock : ";
+        if (cin >> stock) {
+            break; 
+        } else {
+            cout << "   [ERREUR] Le stock doit etre un chiffre entier. Reessayez." << endl;
+            cin.clear(); 
+            cin.ignore(1000, '\n');
+        }
+    }
+
+    // Création de l'objet selon le type
     if (type == 1) return new Electronique(nom, prix, stock);
     if (type == 2) return new Alimentaire(nom, prix, stock);
-    if (type == 3) return new Vetement(nom, prix, stock);
+    if (type == 3) {
+        return new Vetement(nom, prix, stock);
+    }
+    
     return nullptr;
+}
+void compterItemsParCategorie(const vector<Produit*>& catalogue) {
+    int nbElec = 0, nbAlim = 0, nbVet = 0;
+
+    for (Produit* p : catalogue) {
+        if (p->getType() == "Electronique") nbElec++;
+        else if (p->getType() == "Alimentaire") nbAlim++;
+        else if (p->getType() == "Vetement") nbVet++;
+    }
+
+    cout << "\n--- STATISTIQUES CATALOGUE ---" << endl;
+    cout << "Electronique : " << nbElec << endl;
+    cout << "Alimentaire  : " << nbAlim << endl;
+    cout << "Vetements    : " << nbVet << endl;
+    cout << "TOTAL        : " << catalogue.size() << " produits differents." << endl;
 }
 
 void sauvegarderCatalogue(const vector<Produit*>& catalogue) {
@@ -133,40 +194,60 @@ void sauvegarderCatalogue(const vector<Produit*>& catalogue) {
     }
 }
 
+
 // programme principale
 int main() {
     vector<Produit*> catalogue;
     catalogue.push_back(new Electronique("Smartphone X", 800.0, 2));
     catalogue.push_back(new Alimentaire("Pommes Bio", 3.0, 10));
-    catalogue.push_back(new Vetement("T-Shirt C++", 25.0, 5));
+    catalogue.push_back(new Vetement("T-Shirt ", 25.0, 5));
 
     Panier monPanier;
     vector<string> historique;
     int choix = -1;
 
     while (choix != 0) {
-        cout << "\n=========== MENU E-COMMERCE ===========" << endl;
+         cout << "\n=========== MENU E-COMMERCE ===========" << endl;
         cout << "1. Voir catalogue\n2. Ajouter au panier\n3. Voir facture\n4. Recommandations\n5. ESPACE VENDEUR\n6. Historique\n0. Quitter" << endl;
-        cout << "Votre choix : "; cin >> choix;
-
-        if (choix == 1) {
-            int cat;
-            cout << "Choisir catégorie (1: Electronique, 2: Alimentaire, 3: Vetement) : ";
-            cin >> cat;
-            string cible = (cat == 1) ? "Electronique" : (cat == 2) ? "Alimentaire" : "Vetement";
-
-    cout << "\n--- AFFICHAGE : " << cible << " ---" << endl;
-    for (Produit* p : catalogue) {
-        if (p->getType() == cible) {
-            p->afficher();
+        cout << "Votre choix : ";
+        cin >> choix;
+         while(!(cin >> choix)) {
+           
+    cout << "\n [ERREUR] Saisie invalide ! Veuillez entrer un nombre." << endl;
+    cin.clear(); 
+    cin.ignore(1000, '\n');
+    cout << "\n--- Choisissez un nombre entre 0 et 6 ---\n" << endl; 
+    continue; 
+    } if (choix == 1) {
+    cout << "\n--- CATALOGUE COMPLET ---" << endl;
+    if (catalogue.empty()) {
+        cout << "Le catalogue est vide." << endl;
+    } else {
+        for (size_t i = 0; i < catalogue.size(); ++i) {
+            cout << "[" << i + 1 << "] "; 
+            catalogue[i]->afficher(); 
             cout << endl;
         }
     }
-        } 
+}
         else if (choix == 2) {
-            int id; cout << "ID (1-" << catalogue.size() << "): "; cin >> id;
-            if (id >= 1 && (size_t)id <= catalogue.size()) monPanier.ajouterProduit(catalogue[id-1]);
-        } 
+    int id;
+    cout << "Entrez le numero du produit a ajouter : ";
+    
+    // Protection contre les caractères non-numériques
+    if (!(cin >> id)) {
+        cout << "   [ERREUR] Veuillez entrer un chiffre !" << endl;
+        cin.clear();
+        cin.ignore(1000, '\n');
+    } 
+    // Vérification si l'ID existe dans le vecteur
+    else if (id >= 1 && (size_t)id <= catalogue.size()) {
+        monPanier.ajouterProduit(catalogue[id - 1]);
+    } 
+    else {
+        cout << "   [ERREUR] Ce numero n'existe pas dans le catalogue." << endl;
+    }
+} 
         else if (choix == 3) monPanier.afficherFacture();
         else if (choix == 4) {
             cout << "\n--- RECOMMANDATIONS ---" << endl;
@@ -185,9 +266,11 @@ int main() {
             historique.push_back("Commande de " + to_string(monPanier.calculerMontantTotal()) + " DH");
             sauvegarderCatalogue(catalogue);
         }
+       
         
-        }for(Produit* p : catalogue) delete p;
+    }for(Produit* p : catalogue) delete p;
     return 0;
-    }
+}
 
+    
     
