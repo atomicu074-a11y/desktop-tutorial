@@ -209,9 +209,8 @@ int main() {
         while (!(cin >> choix)) {
         cout << "[ERREUR] Saisie invalide !" << endl;
         cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');//propleme cant hna 👉
-        cout << "\n--- Choisissez un nombre entre 0 et 6 ---\n" << endl;
-        continue;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');//propleme cant hna :)
+        cout << "\n--- Choisissez un nombre entre 0 et 6 ---\n1. Voir catalogue\n2. Ajouter au panier\n3. Voir facture\n4. Recommandations\n5. ESPACE VENDEUR\n6. Historique\n0. Quitter" << endl;
         }
         if (choix == 1) {
         cout << "\n--- CATALOGUE COMPLET ---" << endl;
