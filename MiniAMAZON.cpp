@@ -1,13 +1,9 @@
-
-
-// تم و بحمد الله إكمال هذا الكود 🙂, gestion des erreurs دراتهم و داكشي الي ناقص درتو و les commentaires مقادين اوكون غير نقدرو نديرو أوديو في هاد git huB 🗿
-
-
 // bravo l'équipe 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
+#include <limits>
 
 using namespace std;
 
@@ -130,9 +126,9 @@ Produit* creerNouveauProduit() {
 
     cout << "\n--- ESPACE VENDEUR ---" << endl;
     cout << "1. Electronique | 2. Alimentaire | 3. Vetement : ";
-    cin >> type;
-    cin.ignore(); 
-    cout << "Nom : "; getline(cin, nom);
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 
     //  Vérification que PRIX est un nombre
     while (true) {
@@ -210,44 +206,43 @@ int main() {
          cout << "\n=========== MENU E-COMMERCE ===========" << endl;
         cout << "1. Voir catalogue\n2. Ajouter au panier\n3. Voir facture\n4. Recommandations\n5. ESPACE VENDEUR\n6. Historique\n0. Quitter" << endl;
         cout << "Votre choix : ";
-        cin >> choix;
-         while(!(cin >> choix)) {
-           
-    cout << "\n [ERREUR] Saisie invalide ! Veuillez entrer un nombre." << endl;
-    cin.clear(); 
-    cin.ignore(1000, '\n');
-    cout << "\n--- Choisissez un nombre entre 0 et 6 ---\n" << endl; 
-    continue; 
-    } if (choix == 1) {
-    cout << "\n--- CATALOGUE COMPLET ---" << endl;
-    if (catalogue.empty()) {
-        cout << "Le catalogue est vide." << endl;
-    } else {
-        for (size_t i = 0; i < catalogue.size(); ++i) {
-            cout << "[" << i + 1 << "] "; 
-            catalogue[i]->afficher(); 
-            cout << endl;
+        while (!(cin >> choix)) {
+        cout << "[ERREUR] Saisie invalide !" << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');//propleme cant hna 👉
+        cout << "\n--- Choisissez un nombre entre 0 et 6 ---\n" << endl;
+        continue;
         }
-    }
-}
+        if (choix == 1) {
+        cout << "\n--- CATALOGUE COMPLET ---" << endl;
+            if (catalogue.empty()) {
+            cout << "Le catalogue est vide." << endl;
+            } else {
+                for (size_t i = 0; i < catalogue.size(); ++i) {
+                    cout << "[" << i + 1 << "] "; 
+                    catalogue[i]->afficher(); 
+                    cout << endl;
+                }
+            }
+        }
         else if (choix == 2) {
-    int id;
-    cout << "Entrez le numero du produit a ajouter : ";
+        int id;
+        cout << "Entrez le numero du produit a ajouter : ";
     
     // Protection contre les caractères non-numériques
-    if (!(cin >> id)) {
+        if (!(cin >> id)) {
         cout << "   [ERREUR] Veuillez entrer un chiffre !" << endl;
         cin.clear();
         cin.ignore(1000, '\n');
-    } 
+        } 
     // Vérification si l'ID existe dans le vecteur
-    else if (id >= 1 && (size_t)id <= catalogue.size()) {
+        else if (id >= 1 && (size_t)id <= catalogue.size()) {
         monPanier.ajouterProduit(catalogue[id - 1]);
+        } 
+        else {
+            cout << "   [ERREUR] Ce numero n'existe pas dans le catalogue." << endl;
+        }
     } 
-    else {
-        cout << "   [ERREUR] Ce numero n'existe pas dans le catalogue." << endl;
-    }
-} 
         else if (choix == 3) monPanier.afficherFacture();
         else if (choix == 4) {
             cout << "\n--- RECOMMANDATIONS ---" << endl;
@@ -256,8 +251,8 @@ int main() {
             }
         }
         else if (choix == 5) {
-            Produit* nouveau = creerNouveauProduit();
-            if (nouveau) catalogue.push_back(nouveau);
+        Produit* nouveau = creerNouveauProduit();
+        if (nouveau) catalogue.push_back(nouveau);
         }
         else if (choix == 6) {
             for (const string& s : historique) cout << s << endl;
@@ -271,6 +266,5 @@ int main() {
     }for(Produit* p : catalogue) delete p;
     return 0;
 }
-
-    
+  
     
