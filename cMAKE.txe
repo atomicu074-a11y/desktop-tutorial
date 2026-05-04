@@ -8,13 +8,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Inclure les headers (.h)
-include_directories(include)
+inclu
+de_directories(include)
 
 # Création de l'exécutable
 add_executable(MiniAmazon
     src/main.cpp
-    src/Produit.cpp
+    src/Produit.h
     src/Panier.cpp
+    src/MiniAMAZON.cpp
 )
 
 
