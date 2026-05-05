@@ -10,7 +10,7 @@ private:
 public:
     void ajouterProduit(Produit* p);
     double calculerMontantTotal() const;
-    int getNbArticles() const { return articles.size(); }
+int getNbArticles() const;
     void afficherFacture() const;
 };
 
