@@ -1,3 +1,4 @@
+
 #ifndef PRODUIT_H
 #define PRODUIT_H
 
@@ -33,8 +34,25 @@ public:
     double calculerSimilarite(const Panier& p) const override { return 85.0; }
     string getType() const override { return "Electronique"; }
 };
+class Alimentaire : public Produit {
+public:
+    Alimentaire(string n, double p, int s) : Produit(n, p, s) {}
+    double calculerPrixFinal() const override { return prixBase * 1.055; }
+    double calculerSimilarite(const Panier& p) const override { return 30.0; }
+    string getType() const override { return "Alimentaire"; }
+    
+};
+class Vetement : public Produit {
+public:
+    Vetement(string n, double p, int s) : Produit(n, p, s) {}
+    double calculerPrixFinal() const override { return prixBase * 1.10; }
+    double calculerSimilarite(const Panier& p) const override { return 60.0; }
+    string getType() const override { return "Vetement"; }
+};
+
 
 #endif
+
 
 
 
