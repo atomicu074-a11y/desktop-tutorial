@@ -16,15 +16,15 @@ Magasin::Magasin() {
 
 
 Produit* Magasin::trouver(int id) {
-    for (auto& produit : produits_) {
-        if (produit.id() == id) return &produit;
+    for (auto& p : produits_) {
+        if (p.id() == id) return &p;
     }
     return nullptr;
 }
 
 const Produit* Magasin::trouver(int id) const {
-    for (const auto& produit : produits_) {
-        if (produit.id() == id) return &produit;
+    for (const auto& p : produits_) {
+        if (p.id() == id) return &p;
     }
     return nullptr;
 }
