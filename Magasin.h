@@ -55,6 +55,7 @@ public:
     Magasin();
     std::vector<Produit>& produits() { return produits_; }
     Produit* trouver(int id);
+    const Produit* trouver(int id) const;
     bool ajouter_au_panier(Panier& p, int id, int q, std::string& msg);
     DetailPrix calculer_prix(const Panier& p) const;
     void sauvegarder_journal(const std::string& log);
