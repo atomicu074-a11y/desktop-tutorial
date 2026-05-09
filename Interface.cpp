@@ -75,18 +75,18 @@ void Ui::lancer() {
     });
 
     // 5. Assemblage final
-    auto main_container = Container::Tab({vue_client, vue_produits, vue_panier, vue_client}, &selected_tab);
-    auto main_renderer = Renderer(Container::Horizontal({menu_principal, main_container}), [&] {
-        return vbox({
-            text(" MI-AMAZON TUI ") | bold | center | color(mauve_),
-            separator(),
-            hbox({
-                menu_principal->Render() | size(WIDTH, EQUAL, 20) | border,
-                main_container->Render() | flex | border
-            }) | flex,
-            window(text(" Statut "), text(message_.empty() ? "Prêt" : message_) | color(vert_clair_))
-        }) | bgcolor(fond_);
-    });
+    auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_client}, &selected_tab);
+auto main_renderer = Renderer(Container::Horizontal(Components{menu_principal, main_container}), [&] {
+    return vbox(Elements{ 
+        text(" MI-AMAZON TUI ") | bold | center | color(mauve_),
+        separator(),
+        hbox(Elements{ 
+            menu_principal->Render() | size(WIDTH, EQUAL, 20) | border,
+            main_container->Render() | flex | border
+        }) | flex,
+    
+    }) | bgcolor(fond_);
+});
 
     screen.Loop(main_renderer);
 }
