@@ -9,17 +9,26 @@ class Ui {
 public:
     Ui();
     void lancer();
+
 private:
     // Méthodes de rendu
     ftxui::Element render_produits();
     ftxui::Element render_panier();
     void action_valider_commande();
 
+    // Données du magasin
     Magasin magasin_;
     Client client_;
     std::string message_;
-    // Couleurs Catppuccin
-    ftxui::Color rose_, mauve_, bleu_doux_, vert_clair_;
+
+    ftxui::Color rose_;
+    ftxui::Color mauve_;
+    ftxui::Color bleu_doux_;
+    ftxui::Color vert_clair_;
+    ftxui::Color fond_;
+    ftxui::Color surface_;
+    ftxui::Color alerte_;
+    ftxui::Color accent_; 
 };
 
 #endif
