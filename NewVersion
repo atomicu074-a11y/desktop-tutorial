@@ -1,0 +1,408 @@
+#include <ctime>
+#include <iomanip>
+#include <optional>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+#include <ftxui/dom/elements.hpp>
+
+using namespace ftxui;
+using namespace std;
+
+class Produit {
+public:
+    Produit(int id, string nom, string categorie, double prix, int stock)
+        : id_(id), nom_(move(nom)), categorie_(move(categorie)), prix_(prix), stock_(stock) {}
+
+    int id() const { return id_; }
+    const string& nom() const { return nom_; }
+    const string& categorie() const { return categorie_; }
+    double prix() const { return prix_; }
+    int stock() const { return stock_; }
+
+    void diminuer_stock(int quantite) { stock_ -= quantite; }
+    void augmenter_stock(int quantite) { stock_ += quantite; }
+
+private:
+    int id_;
+    string nom_;
+    string categorie_;
+    double prix_;
+    int stock_;
+};
+
+class Panier {
+public:
+    struct Ligne {
+        int produit_id = 0;
+        int quantite = 0;
+    };
+
+    void ajouter(int produit_id, int quantite) {
+        for (auto& ligne : lignes_) {
+            if (ligne.produit_id == produit_id) {
+                ligne.quantite += quantite;
+                return;
+            }
+        }
+        lignes_.push_back({produit_id, quantite});
+    }
+
+    void vider() { lignes_.clear(); }
+    bool vide() const { return lignes_.empty(); }
+    const vector<Ligne>& lignes() const { return lignes_; }
+
+private:
+    vector<Ligne> lignes_;
+};
+
+struct DetailPrix {
+    double sous_total = 0.0;
+    double remise = 0.0;
+    double total_ht = 0.0;
+    double tva = 0.0;
+    double total_ttc = 0.0;
+};
+
+class Commande {
+public:
+    Commande(int id, string client, vector<Panier::Ligne> lignes, DetailPrix detail)
+        : id_(id), nom_client_(move(client)), lignes_(move(lignes)), detail_(detail) {
+        date_ = date_actuelle();
+    }
+
+    int id() const { return id_; }
+    const string& nom_client() const { return nom_client_; }
+    const string& date() const { return date_; }
+    const vector<Panier::Ligne>& lignes() const { return lignes_; }
+    const DetailPrix& detail() const { return detail_; }
+
+private:
+    static string date_actuelle() {
+        const time_t maintenant = time(nullptr);
+        tm* local = localtime(&maintenant);
+        stringstream ss;
+        ss << put_time(local, "%d/%m/%Y %H:%M:%S");
+        return ss.str();
+    }
+
+    int id_;
+    string nom_client_;
+    string date_;
+    vector<Panier::Ligne> lignes_;
+    DetailPrix detail_;
+};
+
+class Client {
+public:
+    explicit Client(string nom) : nom_(move(nom)) {}
+    const string& nom() const { return nom_; }
+    void set_nom(string nom) { nom_ = move(nom); }
+    Panier& panier() { return panier_; }
+    const Panier& panier() const { return panier_; }
+    const vector<Commande>& historique() const { return historique_; }
+    void ajouter_commande(const Commande& commande) { historique_.push_back(commande); }
+
+private:
+    string nom_;
+    Panier panier_;
+    vector<Commande> historique_;
+};
+
+class Magasin {
+public:
+    Magasin() {
+        produits_.push_back(Produit(1, "ordinateur portable", "informatique", 899.99, 5));
+        produits_.push_back(Produit(2, "souris sans fil", "accessoire", 29.99, 20));
+        produits_.push_back(Produit(3, "clavier mecanique", "accessoire", 149.99, 8));
+        produits_.push_back(Produit(4, "casque audio", "audio", 199.99, 12));
+        produits_.push_back(Produit(5, "ecran 27 pouces", "informatique", 299.99, 3));
+        produits_.push_back(Produit(6, "hub usb-c", "connectique", 49.99, 15));
+        produits_.push_back(Produit(7, "sweat à capuche noir", "vetements", 45.00, 20));
+        produits_.push_back(Produit(8, "sneakers blanches", "chaussures", 89.90, 8));
+        produits_.push_back(Produit(9, "parfum royal oud", "parfumerie", 120.00, 5));
+        produits_.push_back(Produit(10, "jean slim bleu", "vetements", 39.00, 15));
+        produits_.push_back(Produit(11, "bottines en cuir", "chaussures", 110.00, 3));
+        produits_.push_back(Produit(12, "sac à dos urbain", "accessoire", 75.00, 10));
+        produits_.push_back(Produit(13, "imprimante 3D", "informatique", 199.99, 7));
+        produits_.push_back(Produit(14, "tablette graphique", "informatique", 249.99, 4));
+    }
+
+    vector<Produit>& produits() { return produits_; }
+    const vector<Produit>& produits() const { return produits_; }
+
+    Produit* trouver(int id) {
+        for (auto& produit : produits_) { if (produit.id() == id) return &produit; }
+        return nullptr;
+    }
+
+    const Produit* trouver(int id) const {
+        for (const auto& produit : produits_) { if (produit.id() == id) return &produit; }
+        return nullptr;
+    }
+
+    bool ajouter_au_panier(Panier& panier, int id, int quantite, string& message) {
+        Produit* produit = trouver(id);
+        if (!produit) { message = "⚠ produit introuvable"; return false; }
+        if (quantite <= 0) { message = "⚠ quantite invalide"; return false; }
+        if (produit->stock() < quantite) { message = "⚠ stock insuffisant"; return false; }
+
+        produit->diminuer_stock(quantite);
+        panier.ajouter(id, quantite);
+        message = "🛒 produit ajoute au panier";
+        return true;
+    }
+
+    void restaurer_stock(const Panier& panier) {
+        for (const auto& ligne : panier.lignes()) {
+            Produit* produit = trouver(ligne.produit_id);
+            if (produit) produit->augmenter_stock(ligne.quantite);
+        }
+    }
+
+    DetailPrix calculer_prix(const Panier& panier) const {
+        DetailPrix detail;
+        for (const auto& ligne : panier.lignes()) {
+            const Produit* produit = trouver(ligne.produit_id);
+            if (produit) detail.sous_total += produit->prix() * ligne.quantite;
+        }
+        detail.remise = detail.sous_total > 500.0 ? detail.sous_total * 0.10 : 0.0;
+        detail.total_ht = detail.sous_total - detail.remise;
+        detail.tva = detail.total_ht * 0.20;
+        detail.total_ttc = detail.total_ht + detail.tva;
+        return detail;
+    }
+
+private:
+    vector<Produit> produits_;
+};
+
+class Ui {
+public:
+    Ui() : client_("invité") {
+        rose_ = Color::RGB(245, 194, 231);
+        mauve_ = Color::RGB(203, 166, 247);
+        bleu_doux_ = Color::RGB(137, 180, 250);
+        vert_clair_ = Color::RGB(166, 227, 161);
+        texte_ = Color::RGB(205, 214, 244);
+        fond_ = Color::RGB(30, 30, 46);
+        surface_ = Color::RGB(49, 50, 68);
+        alerte_ = Color::RGB(243, 139, 168);
+        accent_ = Color::RGB(250, 179, 135);
+    }
+
+    void lancer() {
+        menu_items_ = {"💖 client", "📦 produits", "🛒 panier", "historique"};
+
+        auto menu = Menu(&menu_items_, &onglet_selectionne_);
+        auto menu_produits_panier = Menu(&produits_panier_items_, &produit_panier_selection_);
+
+        auto input_nom = Input(&saisie_nom_, "nom client");
+        auto input_qte = Input(&saisie_qte_, "quantite");
+
+        auto bouton_client = Button("appliquer", [&] {
+            if (!saisie_nom_.empty()) {
+                client_.set_nom(saisie_nom_);
+                message_ = "💖 client mis a jour";
+            } else { message_ = "⚠ nom client vide"; }
+        });
+
+        auto bouton_ajouter = Button("ajouter au panier", [&] { action_ajouter_panier(); });
+
+        auto bouton_valider = Button("valider commande", [&] { action_valider_commande(); });
+
+        auto bouton_vider = Button("vider panier", [&] {
+            if (client_.panier().vide()) { message_ = "⚠ panier deja vide"; return; }
+            magasin_.restaurer_stock(client_.panier());
+            client_.panier().vider();
+            message_ = "🛒 panier vide et stock restaure";
+        });
+
+        auto vue_produits = Renderer([&] { return render_produits(); });
+
+        auto conteneur_panier = Container::Vertical({menu_produits_panier, input_qte, bouton_ajouter, bouton_valider, bouton_vider});
+        auto vue_panier = Renderer(conteneur_panier, [&] {
+            mettre_a_jour_liste_produits_panier();
+            return window(text("🛒 panier") | bold | color(mauve_),
+                        vbox({
+                            text("selectionner un produit :") | color(bleu_doux_),
+                            menu_produits_panier->Render() | vscroll_indicator | frame | size(HEIGHT, EQUAL, 6),
+                            separator(),
+                            hbox({text("quantite   : ") | color(bleu_doux_), input_qte->Render()}),
+                            separator(),
+                            hbox({bouton_ajouter->Render(), filler(), bouton_valider->Render(), filler(), bouton_vider->Render()}),
+                            separator(),
+                            render_lignes_panier(),
+                            separator(),
+                            render_totaux()
+                        }) | bgcolor(surface_));
+        });
+
+        auto conteneur_client = Container::Vertical({input_nom, bouton_client});
+        auto vue_client = Renderer(conteneur_client, [&] {
+            return window(text("💖 client") | bold | color(rose_),
+                        vbox({text("nom actuel : " + client_.nom()) | color(texte_),
+                                separator(),
+                                hbox({text("nouveau nom : ") | color(bleu_doux_), input_nom->Render()}),
+                                separator(),
+                                bouton_client->Render()}) | bgcolor(surface_));
+        });
+
+        auto vue_historique = Renderer([&] { return render_historique(); });
+
+        auto pages = Container::Tab({vue_client, vue_produits, vue_panier, vue_historique}, &onglet_selectionne_);
+        auto racine = Container::Horizontal({menu, pages});
+
+        auto rendu = Renderer(racine, [&] {
+            return vbox({
+                text("boutique en ligne ") | bold | color(rose_) | center,
+                hbox({
+                    window(text("navigation") | bold | color(bleu_doux_),
+                        vbox({menu->Render()}) | bgcolor(surface_)) | size(WIDTH, EQUAL, 28),
+                    filler(),
+                    pages->Render() | flex
+                }) | flex,
+                separator(),
+                window(text("messages") | bold | color(vert_clair_),
+                    text(message_.empty() ? "pret" : message_) | color(message_.find("⚠") != string::npos ? alerte_ : vert_clair_)) | border,
+                separator(),
+                text("realise par MDL") | bold | color(bleu_doux_) | center
+            }) | bgcolor(fond_) | color(texte_) | border;
+        });
+
+        auto ecran = ScreenInteractive::FitComponent();
+        ecran.Loop(rendu);
+    }
+
+private:
+    static optional<int> convertir_entier(const string& valeur) {
+        try {
+            size_t pos = 0;
+            int entier = stoi(valeur, &pos);
+            if (pos != valeur.size()) return nullopt;
+            return entier;
+        } catch (...) { return nullopt; }
+    }
+
+    void action_ajouter_panier() {
+        const auto qte = convertir_entier(saisie_qte_);
+        if (!qte) { message_ = "⚠ quantite invalide"; return; }
+        if (magasin_.produits().empty()) { message_ = "⚠ aucun produit disponible"; return; }
+        if (produit_panier_selection_ < 0 || produit_panier_selection_ >= (int)magasin_.produits().size()) {
+            message_ = "⚠ selection produit invalide"; return;
+        }
+        const int id = magasin_.produits()[produit_panier_selection_].id();
+        magasin_.ajouter_au_panier(client_.panier(), id, *qte, message_);
+    }
+
+    void mettre_a_jour_liste_produits_panier() {
+        produits_panier_items_.clear();
+        for (const auto& produit : magasin_.produits()) {
+            stringstream ss;
+            ss << "#" << (produit.id() < 10 ? "0" : "") << produit.id() << " " << produit.nom() << " | " 
+               << fixed << setprecision(2) << produit.prix() << " eur | stock " << produit.stock();
+            produits_panier_items_.push_back(ss.str());
+        }
+        if (produits_panier_items_.empty()) {
+            produit_panier_selection_ = 0;
+            produits_panier_items_.push_back("aucun produit");
+        }
+    }
+
+    void action_valider_commande() {
+        if (client_.panier().vide()) { message_ = "⚠ panier vide, commande impossible"; return; }
+        const DetailPrix detail = magasin_.calculer_prix(client_.panier());
+        const Commande commande(++compteur_commande_, client_.nom(), client_.panier().lignes(), detail);
+        client_.ajouter_commande(commande);
+        client_.panier().vider();
+        message_ = "📦 commande validee avec succes";
+    }
+
+    Element render_produits() const {
+        Elements lignes;
+        for (const auto& produit : magasin_.produits()) {
+            const bool stock_faible = produit.stock() <= 3;
+            stringstream ss;
+            ss << "#" << (produit.id() < 10 ? "0" : "") << produit.id() << "  " << produit.nom() << "  [" << produit.categorie()
+               << "]  " << fixed << setprecision(2) << produit.prix() << " eur  stock: " << produit.stock();
+            Element ligne = text(ss.str()) | color(stock_faible ? alerte_ : vert_clair_);
+            if (stock_faible) ligne = hbox({ligne, text("  ⚠ stock faible") | color(alerte_)});
+            lignes.push_back(ligne);
+        }
+        return window(text("📦 catalogue") | bold | color(mauve_), vbox(move(lignes)) | bgcolor(surface_) | vscroll_indicator | frame);
+    }
+
+    Element render_lignes_panier() const {
+        if (client_.panier().vide()) return text("🛒 panier vide") | color(bleu_doux_);
+        Elements lignes;
+        for (const auto& ligne : client_.panier().lignes()) {
+            const Produit* produit = magasin_.trouver(ligne.produit_id);
+            if (!produit) continue;
+            stringstream ss;
+            ss << "• " << produit->nom() << " x" << ligne.quantite << " = " << fixed << setprecision(2)
+               << (produit->prix() * ligne.quantite) << " eur";
+            lignes.push_back(text(ss.str()) | color(rose_));
+        }
+        return vbox(move(lignes));
+    }
+
+    Element render_totaux() const {
+        const DetailPrix detail = magasin_.calculer_prix(client_.panier());
+        stringstream s1, s2, s3, s4;
+        s1 << "sous-total : " << fixed << setprecision(2) << detail.sous_total << " eur";
+        s2 << "remise 10% : -" << fixed << setprecision(2) << detail.remise << " eur";
+        s3 << "tva 20%    : " << fixed << setprecision(2) << detail.tva << " eur";
+        s4 << "total ttc  : " << fixed << setprecision(2) << detail.total_ttc << " eur";
+        return vbox({
+            text(s1.str()) | color(bleu_doux_),
+            text(s2.str()) | color(accent_),
+            text(s3.str()) | color(mauve_),
+            text(s4.str()) | bold | color(vert_clair_)
+        });
+    }
+
+    Element render_historique() const {
+        if (client_.historique().empty()) {
+            return window(text("historique") | bold | color(rose_),
+                        vbox({text("aucune commande pour le moment") | color(bleu_doux_)}) | bgcolor(surface_));
+        }
+        Elements cartes;
+        for (const auto& commande : client_.historique()) {
+            stringstream tete; tete << "commande #" << commande.id() << " - " << commande.date();
+            Elements details;
+            details.push_back(text("client : " + commande.nom_client()) | color(texte_));
+            for (const auto& ligne : commande.lignes()) {
+                const Produit* produit = magasin_.trouver(ligne.produit_id);
+                if (!produit) continue;
+                stringstream ss; ss << "- " << produit->nom() << " x" << ligne.quantite;
+                details.push_back(text(ss.str()) | color(mauve_));
+            }
+            stringstream total; total << "total ttc : " << fixed << setprecision(2) << commande.detail().total_ttc << " eur";
+            details.push_back(separator());
+            details.push_back(text(total.str()) | bold | color(vert_clair_));
+            cartes.push_back(window(text(tete.str()) | bold | color(rose_), vbox(move(details))));
+        }
+        return window(text("📦 historique") | bold | color(rose_), vbox(move(cartes)) | bgcolor(surface_) | vscroll_indicator | frame);
+    }
+
+    Magasin magasin_;
+    Client client_;
+    int compteur_commande_ = 0;
+    vector<string> menu_items_;
+    int onglet_selectionne_ = 0;
+    vector<string> produits_panier_items_;
+    int produit_panier_selection_ = 0;
+    string saisie_nom_;
+    string saisie_qte_;
+    string message_;
+    Color rose_, mauve_, bleu_doux_, vert_clair_, texte_, fond_, surface_, alerte_, accent_;
+};
+
+int main() {
+    Ui ui;
+    ui.lancer();
+    return 0;
+}
