@@ -7,7 +7,6 @@ using namespace ftxui;
 using namespace std;
 
 Ui::Ui() : client_("invité") {
-    // Palette Catppuccin
     rose_ = Color::RGB(245, 194, 231);
     mauve_ = Color::RGB(203, 166, 247);
     bleu_doux_ = Color::RGB(137, 180, 250);
@@ -18,14 +17,21 @@ Ui::Ui() : client_("invité") {
     accent_ = Color::RGB(250, 179, 135);
 }
 
+//fonction pour afficher l'historique 
+Element Ui::render_historique() {
+    Elements lignes;
+    lignes.push_back(text(" Historique des transactions") | bold | color(mauve_));
+    lignes.push_back(separator());
+    lignes.push_back(text(" [Consultez le fichier journal.txt pour le détail] ") | dim);
+    lignes.push_back(text(" ---------------------------------------------- ") | dim);
+    return window(text(" Historique "), vbox(move(lignes))) | bgcolor(surface_);
+}
+
 void Ui::lancer() {
     auto screen = ScreenInteractive::FitComponent();
 
-    // 1. Déclarations des variables de navigation 
     vector<string> menu_entries = {"💖 Client", "📦 Produits", "🛒 Panier", "📜 Historique"};
     int selected_tab = 0;
-    
-    // 2. Composants
     auto menu_principal = Menu(&menu_entries, &selected_tab);
 
     vector<string> produits_liste;
@@ -33,11 +39,11 @@ void Ui::lancer() {
     string saisie_qte = "1";
     auto menu_panier = Menu(&produits_liste, &produit_selectionne);
     auto input_qte = Input(&saisie_qte, "Qté");
-    // le bouton Vider 
+
     auto btn_vider = Button("Vider Panier", [&] {
-    client_.panier().vider();
-    message_ = "🗑 Panier vidé avec succès";
-});
+        client_.panier().vider();
+        message_ = "🗑 Panier vidé avec succès";
+    });
 
     auto btn_ajouter = Button("Ajouter au Panier", [&] {
         try {
@@ -50,44 +56,40 @@ void Ui::lancer() {
     });
 
     auto btn_valider = Button("Valider Commande", [&] { action_valider_commande(); });
-
-    // 3. Définition des Vues
     auto vue_client = Renderer([&] {
-        return window(text(" Informations Client ") | bold | color(rose_),
+        return window(text(" Informations Client "),
                       vbox({
                           text("Connecté en tant que : " + client_.nom()) | color(bleu_doux_),
                           separator(),
-                          text("Modifiez votre nom dans le code ou via Input") | dim
+                          text("Statut : Prêt à commander") | dim
                       })) | bgcolor(surface_);
     });
 
     auto vue_produits = Renderer([&] { return render_produits(); });
 
-    auto conteneur_panier = Container::Vertical({menu_panier, input_qte, btn_ajouter, btn_valider});
+    auto conteneur_panier = Container::Vertical({menu_panier, input_qte, btn_ajouter, btn_vider, btn_valider});
     auto vue_panier = Renderer(conteneur_panier, [&] {
         produits_liste.clear();
         for (auto& p : magasin_.produits()) {
             produits_liste.push_back(p.nom() + " (" + to_string(p.stock()) + " en stock)");
-        return vbox({
-        window(text(" Sélection "), menu_panier->Render() | frame),
-        hbox({btn_ajouter->Render() | border, btn_vider->Render() | border, btn_valider->Render() | border}),
-        separator(),
-        render_panier()
-    }) | bgcolor(surface_);
-});
         }
         
         return vbox({
-            window(text(" Sélection "), menu_panier->Render() | vscroll_indicator | frame | size(HEIGHT, EQUAL, 6)),
+            window(text(" Sélectionner un produit "), menu_panier->Render() | vscroll_indicator | frame | size(HEIGHT, EQUAL, 6)),
             hbox({text(" Quantité : "), input_qte->Render() | border}),
-            hbox({btn_ajouter->Render() | border, filler(), btn_valider->Render() | border}),
+            hbox({
+                btn_ajouter->Render() | border, 
+                btn_vider->Render() | border, 
+                filler(), 
+                btn_valider->Render() | border
+            }),
             separator(),
             render_panier()
         }) | bgcolor(surface_);
     });
 
-    // 4. Assemblage
-    auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_client}, &selected_tab);
+    auto vue_historique = Renderer([&] { return render_historique(); });
+    auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_historique}, &selected_tab);
 
     auto main_renderer = Renderer(Container::Horizontal(Components{menu_principal, main_container}), [&] {
         return vbox(Elements{
@@ -112,13 +114,11 @@ Element Ui::render_produits() {
     for (const auto& p : magasin_.produits()) {
         stringstream ss;
         ss << fixed << setprecision(2) << p.prix() << " eur";
-
-        bool low = p.stock() <= 3;
         rows.push_back(hbox({
             text("#" + to_string(p.id()) + " " + p.nom()),
             filler(),
             text(ss.str()) | color(vert_clair_),
-            text(" | stock " + to_string(p.stock())) | color(low ? alerte_ : bleu_doux_)
+            text(" | stock " + to_string(p.stock())) | color(p.stock() <= 3 ? alerte_ : bleu_doux_)
         }));
     }
     return window(text(" Catalogue "), vbox(move(rows))) | bgcolor(surface_);
@@ -126,7 +126,6 @@ Element Ui::render_produits() {
 
 Element Ui::render_panier() {
     DetailPrix d = magasin_.calculer_prix(client_.panier());
-    
     auto ligne_style = [](string label, double val, Color col) {
         stringstream ss;
         ss << fixed << setprecision(2) << val << " eur";
@@ -155,10 +154,6 @@ void Ui::action_valider_commande() {
     client_.panier().vider();
     message_ = "📦 Commande validée et enregistrée !";
 }
-
-
-
-
 
 
 
