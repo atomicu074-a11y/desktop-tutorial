@@ -1,43 +1,108 @@
-🛒 Mini-Amazon - Plateforme E-commerce C++
-📝 Description du ProjetCe
+# 🛒 Mini E-Commerce en C++
 
-CE projet  simule une plateforme de vente en ligne avec gestion des stocks, des commandes et un moteur de recommandation polymorphique
+## 📌 Description
 
+Ce projet est une application e-commerce développée en C++ moderne.
+L’application permet de gérer un catalogue de produits, un panier d’achat,
+les commandes des clients ainsi qu’un historique des achats.
 
+Le projet utilise la programmation orientée objet (POO),
+la bibliothèque STL et une interface utilisateur terminal moderne avec FTXUI.
 
+---
 
-.🚀 FonctionnalitésCatalogue Dynamique : 
+# 🚀 Fonctionnalités
 
+✅ Gestion du catalogue produits  
+✅ Gestion du stock  
+✅ Ajout au panier  
+✅ Calcul automatique des prix  
+✅ Calcul TVA et remises  
+✅ Validation des commandes  
+✅ Historique des commandes  
+✅ Interface utilisateur interactive  
+✅ Gestion des erreurs utilisateur  
 
-Gestion de produits par catégories (Électronique, Alimentaire, Vêtements)
+---
 
-.Gestion du Panier :
+# 🧱 Architecture du Projet
 
-Ajout d'articles et calcul automatique du total avec TVA et remises
+```text
+.
+├── CMakeLists.txt
+├── main.cpp
+├── Interface.cpp
+├── Interface.h
+├── Magasin.cpp
+├── Magasin.h
+├── README.md
+└── .gitignore
+```
 
-.Suivi des Stocks :
+---
 
-Alertes automatiques en cas de rupture de stock
+# 🛠️ Technologies utilisées
 
-.Espace Vendeur : 
+- C++17
+- STL
+- Programmation Orientée Objet
+- FTXUI
+- CMake
+- Git / GitHub
 
-Possibilité d'ajouter de nouveaux produits en temps réel
+---
 
-.Moteur de Recommandation :
+# ⚙️ Compilation
 
-Calcul de similarité basé sur le polymorphisme dynamique.
+## 1. Créer le dossier build
 
-🛠 Concepts POO Appliqués
+```bash
+mkdir build
+cd build
+```
 
-Pour répondre aux exigences du module, ce projet met en œuvre:
+## 2. Générer le projet avec CMake
 
-Encapsulation : Protection des données membres des classes.
+```bash
+cmake ..
+```
 
-Héritage : Spécialisation des types de produits.
+## 3. Compiler
 
-Polymorphisme : Utilisation de méthodes virtuelles pour les prix et les recommandations.
+```bash
+make
+```
 
-Surcharge d'opérateurs : Manipulation intuitive des objets .
+---
+
+# ▶️ Exécution
+
+```bash
+./MiniEcommerce
+```
+
+---
+
+# 📚 Concepts POO utilisés
+
+- Encapsulation
+- Abstraction
+- Composition
+- Modularité
+- Gestion des classes
+
+---
+
+# 🎨 Interface
+
+L’interface utilisateur est réalisée avec la bibliothèque FTXUI afin de proposer une expérience moderne directement dans le terminal.
+
+---
+
+# 👨‍💻 Auteur
+
+Projet réalisé par MDL.
+
 
 
 
