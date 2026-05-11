@@ -21,7 +21,7 @@ Ui::Ui() : client_("invité") {
 void Ui::lancer() {
     auto screen = ScreenInteractive::FitComponent();
 
-    // 1. Déclarations des variables de navigation (DOIVENT être avant le renderer)
+    // 1. Déclarations des variables de navigation 
     vector<string> menu_entries = {"💖 Client", "📦 Produits", "🛒 Panier", "📜 Historique"};
     int selected_tab = 0;
     
