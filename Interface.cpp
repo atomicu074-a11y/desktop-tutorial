@@ -33,6 +33,11 @@ void Ui::lancer() {
     string saisie_qte = "1";
     auto menu_panier = Menu(&produits_liste, &produit_selectionne);
     auto input_qte = Input(&saisie_qte, "Qté");
+    // le bouton Vider 
+    auto btn_vider = Button("Vider Panier", [&] {
+    client_.panier().vider();
+    message_ = "🗑 Panier vidé avec succès";
+});
 
     auto btn_ajouter = Button("Ajouter au Panier", [&] {
         try {
@@ -63,6 +68,13 @@ void Ui::lancer() {
         produits_liste.clear();
         for (auto& p : magasin_.produits()) {
             produits_liste.push_back(p.nom() + " (" + to_string(p.stock()) + " en stock)");
+        return vbox({
+        window(text(" Sélection "), menu_panier->Render() | frame),
+        hbox({btn_ajouter->Render() | border, btn_vider->Render() | border, btn_valider->Render() | border}),
+        separator(),
+        render_panier()
+    }) | bgcolor(surface_);
+});
         }
         
         return vbox({
