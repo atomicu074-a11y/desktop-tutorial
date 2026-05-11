@@ -78,7 +78,7 @@ make
 # ▶️ Exécution
 
 ```bash
-./MiniEcommerce
+./boutique_app.exe
 ```
 
 ---
