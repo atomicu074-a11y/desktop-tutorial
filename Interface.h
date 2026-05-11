@@ -14,6 +14,7 @@ private:
     // Méthodes de rendu
     ftxui::Element render_produits();
     ftxui::Element render_panier();
+    ftxui::Element render_historique();
     void action_valider_commande();
 
     // Données du magasin
