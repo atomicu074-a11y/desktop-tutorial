@@ -17,18 +17,13 @@ private:
     void action_valider_commande();
 
     // Données du magasin
-    Magasin magasin_;
+  Magasin magasin_;
     Client client_;
     std::string message_;
 
-    ftxui::Color rose_;
-    ftxui::Color mauve_;
-    ftxui::Color bleu_doux_;
-    ftxui::Color vert_clair_;
-    ftxui::Color fond_;
-    ftxui::Color surface_;
-    ftxui::Color alerte_;
-    ftxui::Color accent_; 
+    // Palette de couleurs complète
+    ftxui::Color rose_, mauve_, bleu_doux_, vert_clair_;
+    ftxui::Color fond_, surface_, alerte_, accent_, texte_gris_;
 };
 
 #endif
