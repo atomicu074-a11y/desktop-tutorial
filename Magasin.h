@@ -5,6 +5,8 @@
 #include <vector>
 #include <ctime>
 
+
+// Résultat du calcul du prix d'un panier
 struct DetailPrix {
     double sous_total = 0.0;
     double remise = 0.0;
@@ -13,6 +15,7 @@ struct DetailPrix {
     double total_ttc = 0.0;
 };
 
+// Représente un produit du magasin
 class Produit {
 public:
     Produit(int id, std::string nom, std::string categorie, double prix, int stock);
@@ -27,6 +30,7 @@ private:
     int id_; std::string nom_, categorie_; double prix_; int stock_;
 };
 
+// Panier du client
 class Panier {
 public:
     struct Ligne { int produit_id; int quantite; };
@@ -38,6 +42,7 @@ private:
     std::vector<Ligne> lignes_;
 };
 
+// Représente un client
 class Client {
 public:
     explicit Client(std::string nom) : nom_(nom) {}
@@ -50,6 +55,7 @@ private:
     Panier panier_;
 };
 
+// Gestion globale du magasin
 class Magasin {
 public:
     Magasin();
