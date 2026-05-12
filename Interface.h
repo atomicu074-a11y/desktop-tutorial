@@ -7,7 +7,11 @@
 
 class Ui {
 public:
+
+   // constructeur principal de l’interface
     Ui();
+
+     // lance l’application et affiche l’interface
     void lancer();
 
 private:
