@@ -2,9 +2,12 @@
 #include <fstream>
 #include <iomanip>
 
+// Constructeur d'un produit
+// Initialise les attributs de base (id, nom, catégorie, prix, stock)
 Produit::Produit(int id, std::string nom, std::string cat, double p, int s) 
     : id_(id), nom_(nom), categorie_(cat), prix_(p), stock_(s) {}
 
+// Initialisation du magasin avec une liste de produits prédéfinis
 Magasin::Magasin() {
     produits_.push_back(Produit(1, "ordinateur portable", "informatique", 899.99, 5));
     produits_.push_back(Produit(2, "souris sans fil", "accessoire", 29.99, 20));
@@ -22,7 +25,7 @@ Magasin::Magasin() {
         produits_.push_back(Produit(14, "tablette graphique", "informatique", 249.99, 4));
 }
 
-
+// Recherche d'un produit par ID (version modifiable)
 Produit* Magasin::trouver(int id) {
     for (auto& p : produits_) {
         if (p.id() == id) return &p;
@@ -30,6 +33,7 @@ Produit* Magasin::trouver(int id) {
     return nullptr;
 }
 
+// Recherche d'un produit par ID (version const, lecture seule)
 const Produit* Magasin::trouver(int id) const {
     for (const auto& p : produits_) {
         if (p.id() == id) return &p;
@@ -37,6 +41,7 @@ const Produit* Magasin::trouver(int id) const {
     return nullptr;
 }
 
+// Sauvegarde d'une ligne dans le fichier journal (historique des commandes)
 void Magasin::sauvegarder_journal(const std::string& log) {
     std::ofstream fichier("journal.txt", std::ios::app);
     if (fichier.is_open()) {
@@ -56,6 +61,7 @@ void Panier::ajouter(int id, int q) {
     lignes_.push_back({id, q});
 }
 
+// Ajout d'un produit au panier avec vérification du stock
 bool Magasin::ajouter_au_panier(Panier& panier, int id, int quantite, std::string& message) {
     Produit* produit = trouver(id);
     if (!produit) {
@@ -66,24 +72,34 @@ bool Magasin::ajouter_au_panier(Panier& panier, int id, int quantite, std::strin
         message = "⚠ stock insuffisant";
         return false;
     }
-
+    
+     // Mise à jour du stock et ajout au panier 
     produit->diminuer_stock(quantite);
     panier.ajouter(id, quantite);
     message = "🛒 produit ajouté au panier";
     return true;
 }
 
+// Calcul du prix total du panier (sous-total, remise, TVA, total TTC)
 DetailPrix Magasin::calculer_prix(const Panier& panier) const {
     DetailPrix detail;
+
+     // Calcul du sous-total
     for (const auto& ligne : panier.lignes()) {
         const Produit* produit = trouver(ligne.produit_id);
         if (produit) {
             detail.sous_total += produit->prix() * ligne.quantite;
         }
     }
+
+     // Application de la remise (10% si > 500)
     detail.remise = detail.sous_total > 500.0 ? detail.sous_total * 0.10 : 0.0;
+
+     // Calcul TVA 20%
     detail.total_ht = detail.sous_total - detail.remise;
     detail.tva = detail.total_ht * 0.20;
+
+     // Total final TTC
     detail.total_ttc = detail.total_ht + detail.tva;
     return detail;
 }
