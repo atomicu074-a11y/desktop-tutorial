@@ -97,6 +97,8 @@ make
 ```
 # 📖 Utilisation du programme
 <img width="497" height="249" alt="image" src="https://github.com/user-attachments/assets/48b85a17-40ad-4173-90d7-3dcbd8e2734e" />
+
+
 Cette interface représente le menu principal de l’application e-commerce.
 La barre de navigation située à gauche permet d’accéder aux différentes sections du programme :
 - Client
@@ -107,6 +109,8 @@ La barre de navigation située à gauche permet d’accéder aux différentes se
 L’utilisateur peut naviguer facilement entre les différentes fonctionnalités grâce à l’interface interactive développée avec FTXUI.
 ---
 <img width="584" height="384" alt="image" src="https://github.com/user-attachments/assets/493f8862-4479-496d-ae24-e18efd955bd8" />
+
+
 Cette interface affiche le catalogue des produits disponibles dans le magasin.
 
 Chaque produit possède :
@@ -118,6 +122,8 @@ Chaque produit possède :
 Le système signale automatiquement les produits ayant un stock faible afin d’améliorer la gestion des articles.
 ---
 <img width="651" height="521" alt="image" src="https://github.com/user-attachments/assets/22e7ddfe-f549-45bf-8532-e459f0e0a87a" />
+
+
 Cette interface permet à l’utilisateur de gérer son panier d’achat.
 
 L’utilisateur peut :
