@@ -6,6 +6,7 @@
 using namespace ftxui;
 using namespace std;
 
+// Constructeur : initialisation de l'utilisateur + thème de l'interface
 Ui::Ui() : client_("invité") {
     rose_ = Color::RGB(245, 194, 231);
     mauve_ = Color::RGB(203, 166, 247);
@@ -27,24 +28,30 @@ Element Ui::render_historique() {
     return window(text(" Historique "), vbox(move(lignes))) | bgcolor(surface_);
 }
 
+// Boucle principale de l'application (interface complète)
 void Ui::lancer() {
     auto screen = ScreenInteractive::FitComponent();
 
+    // Menu principal (navigation)
     vector<string> menu_entries = {"💖 Client", "📦 Produits", "🛒 Panier", "📜 Historique"};
     int selected_tab = 0;
     auto menu_principal = Menu(&menu_entries, &selected_tab);
 
+    // Variables du panier 
     vector<string> produits_liste;
     int produit_selectionne = 0;
     string saisie_qte = "1";
     auto menu_panier = Menu(&produits_liste, &produit_selectionne);
     auto input_qte = Input(&saisie_qte, "Qté");
-
+    
+    
+    // Bouton : vider panier
     auto btn_vider = Button("Vider Panier", [&] {
         client_.panier().vider();
         message_ = "🗑 Panier vidé avec succès";
     });
-
+    
+    // Bouton : ajouter produit au panier
     auto btn_ajouter = Button("Ajouter au Panier", [&] {
         try {
             int qte = stoi(saisie_qte);
@@ -54,8 +61,11 @@ void Ui::lancer() {
             }
         } catch (...) { message_ = "⚠ Quantité invalide"; }
     });
-
+    
+    // Bouton validation commande
     auto btn_valider = Button("Valider Commande", [&] { action_valider_commande(); });
+
+ // Vue client
     auto vue_client = Renderer([&] {
         return window(text(" Informations Client "),
                       vbox({
@@ -64,9 +74,11 @@ void Ui::lancer() {
                           text("Statut : Prêt à commander") | dim
                       })) | bgcolor(surface_);
     });
-
+    
+ // Vue produits
     auto vue_produits = Renderer([&] { return render_produits(); });
-
+    
+ // Vue panier (interface principale du shopping)
     auto conteneur_panier = Container::Vertical({menu_panier, input_qte, btn_ajouter, btn_vider, btn_valider});
     auto vue_panier = Renderer(conteneur_panier, [&] {
         produits_liste.clear();
@@ -87,10 +99,14 @@ void Ui::lancer() {
             render_panier()
         }) | bgcolor(surface_);
     });
-
+    
+   // Vue historique 
     auto vue_historique = Renderer([&] { return render_historique(); });
+
+    // Gestion des onglets (tabs)
     auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_historique}, &selected_tab);
 
+     // Interface globale (layout principal)
     auto main_renderer = Renderer(Container::Horizontal(Components{menu_principal, main_container}), [&] {
         return vbox(Elements{
             text(" boutique en ligne ") | bold | center | color(rose_),
@@ -98,6 +114,8 @@ void Ui::lancer() {
                 window(text("navigation") | color(bleu_doux_), menu_principal->Render()) | size(WIDTH, EQUAL, 25),
                 window(text(menu_entries[selected_tab]) | color(mauve_), main_container->Render() | flex)
             }) | flex,
+
+            // Zone des messages (erreurs / infos) 
             window(text("messages") | color(vert_clair_),
                    text(message_.empty() ? "pret" : message_) 
                    | color(message_.find("⚠") != std::string::npos ? alerte_ : vert_clair_)
@@ -105,10 +123,12 @@ void Ui::lancer() {
             text("realise par MDL") | center | dim
         }) | bgcolor(fond_) | border;
     });
-
+    
+     // Lancement de la boucle UI
     screen.Loop(main_renderer);
 }
 
+// Affichage catalogue produits
 Element Ui::render_produits() {
     Elements rows;
     for (const auto& p : magasin_.produits()) {
@@ -124,6 +144,7 @@ Element Ui::render_produits() {
     return window(text(" Catalogue "), vbox(move(rows))) | bgcolor(surface_);
 }
 
+// Affichage du panier + facture
 Element Ui::render_panier() {
     DetailPrix d = magasin_.calculer_prix(client_.panier());
     auto ligne_style = [](string label, double val, Color col) {
@@ -141,6 +162,7 @@ Element Ui::render_panier() {
     }));
 }
 
+// Validation de commande + sauvegarde
 void Ui::action_valider_commande() {
     if (client_.panier().vide()) {
         message_ = "⚠ Le panier est vide !";
