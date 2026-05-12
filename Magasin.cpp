@@ -2,9 +2,11 @@
 #include <fstream>
 #include <iomanip>
 
+// constructeur Produit
 Produit::Produit(int id, std::string nom, std::string cat, double p, int s) 
     : id_(id), nom_(nom), categorie_(cat), prix_(p), stock_(s) {}
 
+// initialisation du magasin avec les produits
 Magasin::Magasin() {
     produits_.push_back(Produit(1, "ordinateur portable", "informatique", 899.99, 5));
     produits_.push_back(Produit(2, "souris sans fil", "accessoire", 29.99, 20));
@@ -22,7 +24,7 @@ Magasin::Magasin() {
         produits_.push_back(Produit(14, "tablette graphique", "informatique", 249.99, 4));
 }
 
-
+// recherche produit par id
 Produit* Magasin::trouver(int id) {
     for (auto& p : produits_) {
         if (p.id() == id) return &p;
@@ -37,6 +39,7 @@ const Produit* Magasin::trouver(int id) const {
     return nullptr;
 }
 
+// sauvegarde des actions dans un fichier
 void Magasin::sauvegarder_journal(const std::string& log) {
     std::ofstream fichier("journal.txt", std::ios::app);
     if (fichier.is_open()) {
@@ -56,6 +59,7 @@ void Panier::ajouter(int id, int q) {
     lignes_.push_back({id, q});
 }
 
+// ajout au panier avec vérification stock
 bool Magasin::ajouter_au_panier(Panier& panier, int id, int quantite, std::string& message) {
     Produit* produit = trouver(id);
     if (!produit) {
@@ -73,6 +77,7 @@ bool Magasin::ajouter_au_panier(Panier& panier, int id, int quantite, std::strin
     return true;
 }
 
+// calcul du prix total du panier
 DetailPrix Magasin::calculer_prix(const Panier& panier) const {
     DetailPrix detail;
     for (const auto& ligne : panier.lignes()) {
