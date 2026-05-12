@@ -1,16 +1,21 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+// Inclusion de la classe Magasin (logique métier du projet)
 #include "Magasin.h"
+
+// Bibliothèques FTXUI pour créer une interface en terminal (TUI)
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
+// Classe principale qui gère l'interface utilisateur
 class Ui {
 public:
-    Ui();
-    void lancer();
+    Ui();    // Constructeur : initialise l'interface
+    void lancer();   // Lance l'application (boucle principale) 
 
 private:
+
     // Méthodes de rendu
     ftxui::Element render_produits();
     ftxui::Element render_panier();
