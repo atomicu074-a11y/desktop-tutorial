@@ -64,14 +64,18 @@ par exemple :
  cd /c/Users/HP/Downloads/MINIboutique
 ```
 
-
+Pour ceux qui possèdent MSYS2 MINGW64 Il est bon de l'utiliser parce que c' est l'environnement idéal pour compiler un projet C++ sur Windows car il offre une expérience proche de Linux tout en utilisant le compilateur GCC de manière native
 ## 1. Créer le dossier build
 
 ```bash
 mkdir build
 cd build
 ```
-
+ ❗pour MSYS2 MINGW64 utilisateur
+   ```bash
+    cmake -G "MinGW Makefiles" ..
+   ```
+   (Ignorez la deuxième étape et passez à la troisième.)
 ## 2. Générer le projet avec CMake
 
 ```bash
@@ -91,7 +95,43 @@ make
 ```bash
 ./boutique_app.exe
 ```
+# 📖 Utilisation du programme
+<img width="497" height="249" alt="image" src="https://github.com/user-attachments/assets/48b85a17-40ad-4173-90d7-3dcbd8e2734e" />
+Cette interface représente le menu principal de l’application e-commerce.
+La barre de navigation située à gauche permet d’accéder aux différentes sections du programme :
+- Client
+- Produits
+- Panier
+- Historique
 
+L’utilisateur peut naviguer facilement entre les différentes fonctionnalités grâce à l’interface interactive développée avec FTXUI.
+---
+<img width="584" height="384" alt="image" src="https://github.com/user-attachments/assets/493f8862-4479-496d-ae24-e18efd955bd8" />
+Cette interface affiche le catalogue des produits disponibles dans le magasin.
+
+Chaque produit possède :
+- un identifiant,
+- un nom,
+- un prix,
+- une quantité en stock.
+
+Le système signale automatiquement les produits ayant un stock faible afin d’améliorer la gestion des articles.
+---
+<img width="651" height="521" alt="image" src="https://github.com/user-attachments/assets/22e7ddfe-f549-45bf-8532-e459f0e0a87a" />
+Cette interface permet à l’utilisateur de gérer son panier d’achat.
+
+L’utilisateur peut :
+- sélectionner un produit,
+- saisir une quantité,
+- ajouter un produit au panier,
+- vider le panier,
+- valider une commande.
+
+Le programme calcule automatiquement :
+- le sous-total,
+- les remises,
+- la TVA,
+- le total TTC.
 ---
 
 # 📚 Concepts POO utilisés
