@@ -1,12 +1,16 @@
+# Configuration du projet
 cmake_minimum_required(VERSION 3.16)
 project(boutique_tui LANGUAGES CXX)
 
+# Utilisation du standard C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(MSVC)
   add_compile_options(/utf-8)
 endif()
+
+# Téléchargement de la bibliothèque FTXUI
 
 include(FetchContent)
 
@@ -24,6 +28,7 @@ add_executable(boutique_app
     Interface.cpp
 )
 
+# Liaison avec les modules FTXUI
 target_link_libraries(boutique_app PRIVATE 
     ftxui::screen 
     ftxui::dom 
