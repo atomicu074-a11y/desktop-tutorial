@@ -53,6 +53,16 @@ la bibliothèque STL et une interface utilisateur terminal moderne avec FTXUI.
 ---
 
 # ⚙️ Compilation
+###.l'organisation et la vérification de ton environnement:
+Commencez par télécharger le code.
+<img width="520" height="400" alt="image" src="https://github.com/user-attachments/assets/512880e2-9fc4-4bf7-9b89-e8df00f75e41" />
+Aprés :
+1. Se placer à la racine du projetC'est l'étape de base. Tu dois être dans le dossier qui contient ton fichier main.cpp et ton CMakeLists.txt.
+par exempl :  
+```bash
+ cd /c/Users/HP/Downloads/MINIboutique
+```
+
 
 ## 1. Créer le dossier build
 
