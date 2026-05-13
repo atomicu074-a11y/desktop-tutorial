@@ -96,6 +96,7 @@ make
 ./boutique_app.exe
 ```
 # 📖 Utilisation du programme
+📷 Figure 1 — Menu principal
 <img width="497" height="249" alt="image" src="https://github.com/user-attachments/assets/48b85a17-40ad-4173-90d7-3dcbd8e2734e" />
 
 
@@ -108,6 +109,9 @@ La barre de navigation située à gauche permet d’accéder aux différentes se
 
 L’utilisateur peut naviguer facilement entre les différentes fonctionnalités grâce à l’interface interactive développée avec FTXUI.
 ---
+
+
+📦 Figure 2 — Catalogue des produits
 <img width="584" height="384" alt="image" src="https://github.com/user-attachments/assets/493f8862-4479-496d-ae24-e18efd955bd8" />
 
 
@@ -120,7 +124,9 @@ Chaque produit possède :
 - une quantité en stock.
 
 Le système signale automatiquement les produits ayant un stock faible afin d’améliorer la gestion des articles.
+
 ---
+🛒 Figure 3 — Gestion du panier
 <img width="651" height="521" alt="image" src="https://github.com/user-attachments/assets/22e7ddfe-f549-45bf-8532-e459f0e0a87a" />
 
 
@@ -139,6 +145,22 @@ Le programme calcule automatiquement :
 - la TVA,
 - le total TTC.
 ---
+📜 Figure — Historique des commandes
+<img width="710" height="283" alt="Capture d&#39;écran 2026-05-13 010715" src="https://github.com/user-attachments/assets/00cf1d1b-d0f6-41e3-bddf-e5235779ea24" />
+
+
+Cette interface affiche l’historique des commandes effectuées par le client.
+
+Après la validation d’une commande, les informations suivantes sont enregistrées :
+- l’identifiant de la commande,
+- la date et l’heure,
+- les produits achetés,
+- les quantités,
+- le montant total TTC.
+Vous trouverez tout cela dans le fichier Journal de votre fichier builld.
+Cette fonctionnalité permet au client de consulter les anciennes commandes et améliore le suivi des achats réalisés dans l’application.
+
+
 
 # 📚 Concepts POO utilisés
 
