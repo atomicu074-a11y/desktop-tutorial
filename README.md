@@ -96,7 +96,7 @@ make
 ./boutique_app.exe
 ```
 # 📖 Utilisation du programme
-##📷 Figure 1 — Menu principal
+## 📷 Figure 1 — Menu principal
 
 <img width="497" height="249" alt="image" src="https://github.com/user-attachments/assets/48b85a17-40ad-4173-90d7-3dcbd8e2734e" />
 
@@ -112,7 +112,7 @@ L’utilisateur peut naviguer facilement entre les différentes fonctionnalités
 ---
 
 
-##📦 Figure 2 — Catalogue des produits
+## 📦 Figure 2 — Catalogue des produits
 
 <img width="584" height="384" alt="image" src="https://github.com/user-attachments/assets/493f8862-4479-496d-ae24-e18efd955bd8" />
 
@@ -128,7 +128,7 @@ Chaque produit possède :
 Le système signale automatiquement les produits ayant un stock faible afin d’améliorer la gestion des articles.
 
 ---
-##🛒 Figure 3 — Gestion du panier
+## 🛒 Figure 3 — Gestion du panier
 
 <img width="651" height="521" alt="image" src="https://github.com/user-attachments/assets/22e7ddfe-f549-45bf-8532-e459f0e0a87a" />
 
@@ -149,7 +149,7 @@ Le programme calcule automatiquement :
 - le total TTC.
 ---
 
-##📜 Figure — Historique des commandes
+## 📜 Figure — Historique des commandes
 
 <img width="710" height="283" alt="Capture d&#39;écran 2026-05-13 010715" src="https://github.com/user-attachments/assets/00cf1d1b-d0f6-41e3-bddf-e5235779ea24" />
 
