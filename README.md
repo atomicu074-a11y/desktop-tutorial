@@ -162,7 +162,9 @@ Après la validation d’une commande, les informations suivantes sont enregistr
 - les produits achetés,
 - les quantités,
 - le montant total TTC.
+  
 Vous trouverez tout cela dans le fichier Journal de votre fichier builld.
+
 Cette fonctionnalité permet au client de consulter les anciennes commandes et améliore le suivi des achats réalisés dans l’application.
 
 
