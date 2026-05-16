@@ -212,7 +212,7 @@ Element Ui::render_panier() {
     if (d.remise > 0) {
         ss << "Remise 10% : -" << d.remise << " DH\n";
     }
-    ss << "TVA 20%    : " << d.tva << " EUR\n";
+    ss << "TVA 20%    : " << d.tva << " DH\n";
     ss << "TOTAL TTC  : " << d.total_ttc << " DH\n"; 
     ss << "========================================\n\n";
 
