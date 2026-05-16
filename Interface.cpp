@@ -182,21 +182,49 @@ Element Ui::render_panier() {
 // validation de la commande
 void Ui::action_valider_commande() {
 
-     // vérifier si le panier est vide
+  void Ui::action_valider_commande() {
+    // 1. Vérifier si le panier est vide
     if (client_.panier().vide()) {
         message_ = "⚠ Le panier est vide !";
         return;
     }
+
     DetailPrix d = magasin_.calculer_prix(client_.panier());
     stringstream ss;
-    ss << "Commande client [" << client_.nom() << "] - Total: " << d.total_ttc << " DH";
 
- // sauvegarde dans le fichier journal 
+    // 2. Construction d'un ticket de caisse détaillé
+    ss << "========================================\n";
+    ss << " COMMANDE CLIENT : " << client_.nom() << "\n";
+    ss << "========================================\n";
+    ss << "Détail des articles :\n";
+
+    // On boucle sur les lignes du panier
+    for (const auto& ligne : client_.panier().lignes()) {
+        // cherche le produit dans le magasin pour avoir son nom et son prix unitaire
+        const Produit* p = magasin_.trouver(ligne.produit_id);
+        if (p) {
+            ss << "- " << p->nom() 
+               << " (x" << ligne.quantite << ")"
+               << " : " << fixed << setprecision(2) << (p->prix() * ligne.quantite) << " EUR\n";
+        }
+    }
+
+    ss << "----------------------------------------\n";
+    ss << "Sous-total : " << d.sous_total << " EUR\n";
+    if (d.remise > 0) {
+        ss << "Remise 10% : -" << d.remise << " EUR\n";
+    }
+    ss << "TVA 20%    : " << d.tva << " EUR\n";
+    ss << "TOTAL TTC  : " << d.total_ttc << " DH\n"; 
+    ss << "========================================\n\n";
+
+    // 3. Sauvegarde de la chaîne complète  dans le journal
     magasin_.sauvegarder_journal(ss.str());
 
-    // vider le panier après validation
+    // 4. Vider le panier après la validation
     client_.panier().vider();
     message_ = "📦 Commande validée et enregistrée !";
+}
 }
 
 
