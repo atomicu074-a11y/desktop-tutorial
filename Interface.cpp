@@ -180,8 +180,6 @@ Element Ui::render_panier() {
 
 
 // validation de la commande
-void Ui::action_valider_commande() {
-
   void Ui::action_valider_commande() {
     // 1. Vérifier si le panier est vide
     if (client_.panier().vide()) {
@@ -225,7 +223,7 @@ void Ui::action_valider_commande() {
     client_.panier().vider();
     message_ = "📦 Commande validée et enregistrée !";
 }
-}
+
 
 
 
