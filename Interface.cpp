@@ -148,7 +148,7 @@ Element Ui::render_produits() {
     Elements rows;
     for (const auto& p : magasin_.produits()) {
         stringstream ss;
-        ss << fixed << setprecision(2) << p.prix() << " eur";
+        ss << fixed << setprecision(2) << p.prix() << " DH";
         rows.push_back(hbox({
             text("#" + to_string(p.id()) + " " + p.nom()),
             filler(),
@@ -165,7 +165,7 @@ Element Ui::render_panier() {
     DetailPrix d = magasin_.calculer_prix(client_.panier());
     auto ligne_style = [](string label, double val, Color col) {
         stringstream ss;
-        ss << fixed << setprecision(2) << val << " eur";
+        ss << fixed << setprecision(2) << val << " DH";
         return hbox({ text(label), filler(), text(ss.str()) }) | color(col);
     };
 
@@ -203,14 +203,14 @@ Element Ui::render_panier() {
         if (p) {
             ss << "- " << p->nom() 
                << " (x" << ligne.quantite << ")"
-               << " : " << fixed << setprecision(2) << (p->prix() * ligne.quantite) << " EUR\n";
+               << " : " << fixed << setprecision(2) << (p->prix() * ligne.quantite) << " DH\n";
         }
     }
 
     ss << "----------------------------------------\n";
-    ss << "Sous-total : " << d.sous_total << " EUR\n";
+    ss << "Sous-total : " << d.sous_total << " DH\n";
     if (d.remise > 0) {
-        ss << "Remise 10% : -" << d.remise << " EUR\n";
+        ss << "Remise 10% : -" << d.remise << " DH\n";
     }
     ss << "TVA 20%    : " << d.tva << " EUR\n";
     ss << "TOTAL TTC  : " << d.total_ttc << " DH\n"; 
