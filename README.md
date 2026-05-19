@@ -188,6 +188,7 @@ L’interface utilisateur est réalisée avec la bibliothèque FTXUI afin de pro
 # 👨‍💻 Auteur
 
 Projet réalisé par MDL.
+Maryem, Doaa & Laila
 
 
 
