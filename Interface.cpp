@@ -38,7 +38,7 @@ void Ui::lancer() {
     auto screen = ScreenInteractive::FitComponent();
     
     // menu principal 
-    vector<string> menu_entries = {"💖 Client", "📦 Produits", "🛒 Panier", "📜 Historique"};
+    vector<string> menu_entries = {"💖 Client", "📦 Produits", "🛒 Panier", "📜 Historique","🛠 Admin"};
     int selected_tab = 0;
     auto menu_principal = Menu(&menu_entries, &selected_tab);
 
@@ -112,9 +112,54 @@ auto vue_panier = Renderer(conteneur_panier, [&] {
     });
 
     auto vue_historique = Renderer([&] { return render_historique(); });
+    // Variables pour les nouveaux produits (à déclarer au début de lancer())
+string nouv_nom = "";
+string nouv_prix = "0.0";
+string nouv_stock = "0";
+
+auto input_nom = Input(&nouv_nom, "Nom du produit");
+auto input_prix = Input(&nouv_prix, "Prix");
+auto input_stock = Input(&nouv_stock, "Stock");
+
+// Bouton d'action réservé à l'admin
+auto btn_ajouter_admin = Button("Ajouter au Catalogue", [&] {
+    try {
+        double p = stod(nouv_prix);
+        int s = stoi(nouv_stock);
+        if (!nouv_nom.empty() && p > 0 && s >= 0) {
+            // Création et tentative d'ajout via notre méthode sécurisée
+            ProduitElectronique prod(magasin_.produits().size() + 1, nouv_nom, "informatique", p, s);
+            verifier_et_ajouter(prod);
+            
+            // Réinitialisation des champs après succès
+            nouv_nom = ""; nouv_prix = "0.0"; nouv_stock = "0";
+        } else {
+            message_ = "⚠ Données invalides (Le prix doit être supérieur à 0)";
+        }
+    } catch (...) {
+        message_ = "⚠ Erreur de saisie dans les champs numériques";
+    }
+});
+
+// Layout vertical des éléments de saisie admin
+auto conteneur_admin = Container::Vertical({input_nom, input_prix, input_stock, btn_ajouter_admin});
+
+// Rendu graphique de la fenêtre Admin avec les styles de votre charte graphique
+auto vue_admin = Renderer(conteneur_admin, [&] {
+    return window(text(" [Zone Sécurisée] Ajouter un Produit au Catalogue ") | bold | color(accent_), 
+        vbox({
+            hbox(text(" Nom : ") | size(WIDTH, EQUAL, 10), input_nom->Render() | border),
+            hbox(text(" Prix : ") | size(WIDTH, EQUAL, 10), input_prix->Render() | border),
+            hbox(text(" Stock : ") | size(WIDTH, EQUAL, 10), input_stock->Render() | border),
+            vbox(btn_ajouter_admin->Render() | center | border) | size(HEIGHT, EQUAL, 3),
+            separator(),
+            text(" Note : Cette action requiert le rôle 'Administrateur'. ") | dim | italic
+        })
+    ) | bgcolor(surface_);
+});
 
     // navigation entre les pages
-    auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_historique}, &selected_tab);
+    auto main_container = Container::Tab(Components{vue_client, vue_produits, vue_panier, vue_historique, vue_admin}, &selected_tab);
 
      // affichage principal
     auto main_renderer = Renderer(Container::Horizontal(Components{menu_principal, main_container}), [&] {
