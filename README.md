@@ -178,6 +178,8 @@ Cette fonctionnalité permet au client de consulter les anciennes commandes et a
 - Gestion des classes
 
 ---
+u Rapport sur le projet disponible sur le page  suivant :https://extraordinary-tanuki-e213c7.netlify.app/
+---
 
 # 🎨 Interface
 
