@@ -223,6 +223,14 @@ Element Ui::render_panier() {
     client_.panier().vider();
     message_ = "📦 Commande validée et enregistrée !";
 }
+void Ui::verifier_et_ajouter(const ProduitElectronique& nouveau_produit) { 
+    if (client_.role() == "Administrateur") {
+        magasin_.produits().push_back(nouveau_produit);
+        message_ = "💾 [Admin] Nouveau produit ajouté au catalogue avec succès !";
+    } else {
+        message_ = "⚠ Action refusée : Droits d'administrateur requis !";
+    }
+}
 
 
 
