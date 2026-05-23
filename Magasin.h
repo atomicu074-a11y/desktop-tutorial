@@ -17,16 +17,36 @@ struct DetailPrix {
 // représente un produit du magasin
 class Produit {
 public:
-    Produit(int id, std::string nom, std::string categorie, double prix, int stock);
+    Produit(int id, std::string nom, std::string categorie, double prix, int stock)
+        : id_(id), nom_(nom), categorie_(cat), prix_(prix), stock_(stock) {}
+        
+    virtual ~Produit() = default; 
+
     int id() const { return id_; }
     const std::string& nom() const { return nom_; }
-    const std::string& categorie() const { return categorie_; }
+    std::string categorie() const { return categorie_; }
     double prix() const { return prix_; }
     int stock() const { return stock_; }
     void diminuer_stock(int q) { stock_ -= q; }
     void augmenter_stock(int q) { stock_ += q; }
+    virtual std::string get_description_complete() const = 0; 
+
+protected: 
+    int id_; 
+    std::string nom_, categorie_; 
+    double prix_; 
+    int stock_;
+};
+class ProduitElectronique : public Produit {
+public:
+    ProduitElectronique(int id, std::string nom, std::string categorie, double prix, int stock, int garantie_mois = 24)
+        : Produit(id, nom, categorie, prix, stock), garantie_mois_(garantie_mois) {}
+    // Redéfinition polymorphique
+    std::string get_description_complete() const override {
+        return nom_ + " (Garantie : " + std::to_string(garantie_mois_) + " mois)";
+    }
 private:
-    int id_; std::string nom_, categorie_; double prix_; int stock_;
+    int garantie_mois_;
 };
 
 // gère les produits ajoutés par le client
@@ -37,6 +57,8 @@ public:
     void vider() { lignes_.clear(); }
     bool vide() const { return lignes_.empty(); }
     const std::vector<Ligne>& lignes() const { return lignes_; }
+    friend std::ostream& operator<<(std::ostream& os, const Panier& panier);
+
 private:
     std::vector<Ligne> lignes_;
 };
@@ -48,7 +70,6 @@ public:
     std::string nom() const { return nom_; }
     void set_nom(std::string n) { nom_ = n; }
     Panier& panier() { return panier_; }
-    // ... Historique de commandes ...
 private:
     std::string nom_;
     Panier panier_;
