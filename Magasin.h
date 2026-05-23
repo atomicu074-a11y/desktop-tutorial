@@ -29,7 +29,9 @@ public:
     int stock() const { return stock_; }
     void diminuer_stock(int q) { stock_ -= q; }
     void augmenter_stock(int q) { stock_ += q; }
-    virtual std::string get_description_complete() const = 0; 
+    virtual std::string get_description_complete() const {
+        return nom_ + " (" + categorie_ + ")";
+    }
 
 protected: 
     int id_; 
