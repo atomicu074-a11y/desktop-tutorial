@@ -21,6 +21,7 @@ private:
     ftxui::Element render_panier();
     ftxui::Element render_historique();
     void action_valider_commande();
+void verifier_et_ajouter(const ProduitElectronique& nouveau_produit);
 
     // Données du magasin
   Magasin magasin_;
