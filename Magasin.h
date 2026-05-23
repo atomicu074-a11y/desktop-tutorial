@@ -50,6 +50,33 @@ public:
 private:
     int garantie_mois_;
 };
+// Deuxième classe dérivée : Produit Alimentaire
+class ProduitAlimentaire : public Produit {
+public:
+    ProduitAlimentaire(int id, std::string nom, std::string categorie, double prix, int stock, std::string date_peremption)
+        : Produit(id, nom, categorie, prix, stock), date_peremption_(date_peremption) {}
+
+    // Redéfinition polymorphique
+    std::string get_description_complete() const override {
+        return nom_ + " (À consommer avant le : " + date_peremption_ + ")";
+    }
+private:
+    std::string date_peremption_;
+};
+
+// Troisième classe dérivée : Produit en Promotion
+class ProduitEnPromotion : public Produit {
+public:
+    ProduitEnPromotion(int id, std::string nom, std::string categorie, double prix, int stock, int remise_pourcent)
+        : Produit(id, nom, categorie, prix, stock), remise_pourcent_(remise_pourcent) {}
+
+    // Redéfinition polymorphique
+    std::string get_description_complete() const override {
+        return nom_ + " [PROMO -" + std::to_string(remise_pourcent_) + "% !]";
+    }
+private:
+    int remise_pourcent_;
+};
 
 // gère les produits ajoutés par le client
 class Panier {
@@ -65,17 +92,52 @@ private:
     std::vector<Ligne> lignes_;
 };
 
-// représente un client du magasin
-class Client {
+// Classe de base pour tous les utilisateurs du système
+class Utilisateur {
 public:
-    explicit Client(std::string nom) : nom_(nom) {}
+    Utilisateur(std::string nom, std::string role) : nom_(nom), role_(role) {}
+    virtual ~Utilisateur() = default;
+
     std::string nom() const { return nom_; }
+    std::string role() const { return role_; }
     void set_nom(std::string n) { nom_ = n; }
-    Panier& panier() { return panier_; }
-private:
+
+    // Méthode virtuelle polymorphique
+    virtual std::string get_permissions() const {
+        return "Accès de base au catalogue.";
+    }
+
+protected:
     std::string nom_;
+    std::string role_;
+};
+
+// La classe Client hérite publiquement de Utilisateur
+class Client : public Utilisateur {
+public:
+    explicit Client(std::string nom) : Utilisateur(nom, "Client") {}
+
+    Panier& panier() { return panier_; }
+
+    // Redéfinition polymorphique des permissions
+    std::string get_permissions() const override {
+        return "Boutique : Consulter, Ajouter au panier, Passer commande.";
+    }
+
+private:
     Panier panier_;
 };
+
+// Nouvelle classe Administrateur qui hérite aussi de Utilisateur
+class Administrateur : public Utilisateur {
+public:
+    explicit Administrateur(std::string nom) : Utilisateur(nom, "Administrateur") {}
+
+    // Redéfinition polymorphique des permissions
+    std::string get_permissions() const override {
+        return "Back-Office : Gestion totale des stocks et modification des prix.";
+    }
+}; 
 
 // logique principale du magasin
 class Magasin {
@@ -87,6 +149,9 @@ public:
     bool ajouter_au_panier(Panier& p, int id, int q, std::string& msg);
     DetailPrix calculer_prix(const Panier& p) const;
     void sauvegarder_journal(const std::string& log);
+    void ajouter_nouveau_produit(const Produit& p) {
+    produits_.push_back(p);
+    }
 private:
     std::vector<Produit> produits_;
 };
