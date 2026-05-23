@@ -18,9 +18,9 @@ struct DetailPrix {
 class Produit {
 public:
     Produit(int id, std::string nom, std::string categorie, double prix, int stock)
-        : id_(id), nom_(nom), categorie_(cat), prix_(prix), stock_(stock) {}
+        : id_(id), nom_(nom), categorie_(categorie), prix_(prix), stock_(stock) {}
         
-    virtual ~Produit() = default; 
+    virtual ~Produit() = default;
 
     int id() const { return id_; }
     const std::string& nom() const { return nom_; }
