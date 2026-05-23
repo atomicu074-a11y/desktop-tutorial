@@ -92,3 +92,7 @@ DetailPrix Magasin::calculer_prix(const Panier& panier) const {
     detail.total_ttc = detail.total_ht + detail.tva;
     return detail;
 }
+std::ostream& operator<<(std::ostream& os, const Panier& panier) {
+    os << "Contenu du panier (" << panier.lignes().size() << " lignes distinctes)";
+    return os;
+}
