@@ -19,7 +19,7 @@ Magasin::Magasin() {
     produits_.push_back(ProduitElectronique(13, "imprimante 3D", "informatique", 199.99, 7));
     produits_.push_back(ProduitElectronique(14, "tablette graphique", "informatique", 249.99, 4));
 }
-}
+
 
 // recherche produit par id
 Produit* Magasin::trouver(int id) {
