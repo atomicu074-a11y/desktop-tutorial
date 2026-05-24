@@ -132,15 +132,19 @@ auto btn_ajouter_admin = Button("Ajouter au Catalogue", [&] {
             verifier_et_ajouter(prod);
             
             // Réinitialisation des champs après succès
-            nouv_nom = ""; nouv_prix = "0.0"; nouv_stock = "0";
+            nouv_nom = ""; 
+            nouv_prix = "0.0"; 
+            nouv_stock = "0";
         } else {
             message_ = "⚠ Données invalides (Le prix doit être supérieur à 0)";
         }
     } catch (...) {
         message_ = "⚠ Erreur de saisie dans les champs numériques";
     }
+    
+    // FORCE LE RAFRAÎCHISSEMENT DE L'ÉCRAN APPRÈS LE CLIC
+    screen.RequestAnimationFrame(); 
 });
-
 // Layout vertical des éléments de saisie admin
 auto conteneur_admin = Container::Vertical({input_nom, input_prix, input_stock, btn_ajouter_admin});
 
@@ -151,7 +155,9 @@ auto vue_admin = Renderer(conteneur_admin, [&] {
             hbox(text(" Nom : ") | size(WIDTH, EQUAL, 10), input_nom->Render() | border),
             hbox(text(" Prix : ") | size(WIDTH, EQUAL, 10), input_prix->Render() | border),
             hbox(text(" Stock : ") | size(WIDTH, EQUAL, 10), input_stock->Render() | border),
-            vbox(btn_ajouter_admin->Render() | center | border) | size(HEIGHT, EQUAL, 3),
+            hbox(text(" Stock : ") | size(WIDTH, EQUAL, 10), input_stock->Render() | border),
+            separator(),
+            vbox({ btn_ajouter_admin->Render() | center }), 
             separator(),
             text(" Note : Cette action requiert le rôle 'Administrateur'. ") | dim | italic
         })
