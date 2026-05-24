@@ -155,7 +155,6 @@ auto vue_admin = Renderer(conteneur_admin, [&] {
             hbox(text(" Nom : ") | size(WIDTH, EQUAL, 10), input_nom->Render() | border),
             hbox(text(" Prix : ") | size(WIDTH, EQUAL, 10), input_prix->Render() | border),
             hbox(text(" Stock : ") | size(WIDTH, EQUAL, 10), input_stock->Render() | border),
-            hbox(text(" Stock : ") | size(WIDTH, EQUAL, 10), input_stock->Render() | border),
             separator(),
             vbox({ btn_ajouter_admin->Render() | center }), 
             separator(),
