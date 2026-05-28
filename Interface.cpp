@@ -34,6 +34,9 @@ Element Ui::render_historique() {
 
 void Ui::lancer() {
 
+   // 
+auto input_nom_client = Input(&saisie_nom_client, "Entrez votre nom ici...");
+
     // lancement de l’interface
     auto screen = ScreenInteractive::FitComponent();
     
@@ -78,14 +81,34 @@ auto btn_ajouter = Button("Ajouter au Panier", [&] {
 });
 
     // informations du client
-    auto vue_client = Renderer([&] {
-        return window(text(" Informations Client "),
-                      vbox({
-                          text("Connecté en tant que : " + client_.nom()) | color(bleu_doux_),
-                          separator(),
-                          text("Statut : Prêt à commander") | dim
-                      })) | bgcolor(surface_);
-    });
+ auto vue_client = Renderer(input_nom_client, [&] {
+    return window(text(" Informations Client ") | bold | color(accent_),
+        vbox({
+            text(" Connecté en tant que : " + (client_.nom().empty() ? "invité" : client_.nom())) | color(accent_),
+            separator(),
+            hbox(text(" Votre Nom : "), input_nom_client->Render() | border),
+            separator(),
+            text(" Statut : Prêt à commander ") | dim | italic
+        })
+    ) | bgcolor(surface_);
+});
+
+   if (!saisie_nom_client.empty()) {
+        client_.set_nom(saisie_nom_client);
+    } else {
+        client_.set_nom("invité"); 
+    }
+   // Rendu graphique de la fenêtre Client
+    return window(text(" Informations Client ") | bold | color(accent_),
+        vbox({
+            text(" Connecté en tant que : " + client_.nom()) | color(bleu_doux_),
+            separator(),
+            hbox(text(" Votre Nom : ") | size(WIDTH, EQUAL, 12), input_nom_client->Render() | border),
+            separator(),
+            text(" Statut : Prêt à commander ") | dim | italic
+        })
+    ) | bgcolor(surface_);
+});
     
      // affichage des produits 
     auto vue_produits = Renderer([&] { return render_produits(); });
