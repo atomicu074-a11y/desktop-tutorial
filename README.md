@@ -148,6 +148,21 @@ Le programme calcule automatiquement :
 - la TVA,
 - le total TTC.
 ---
+## 🔐 Section Administration
+
+<img width="619" height="394" alt="image" src="https://github.com/user-attachments/assets/a80730f6-baf0-46b2-811a-1632426f1014" />
+
+
+Elle permet d’ajouter dynamiquement de nouveaux produits au catalogue grâce à un formulaire interactif développé avec FTXUI.
+
+L’administrateur peut saisir :
+- le nom du produit,
+- le prix,
+- la quantité disponible en stock.
+
+Cette fonctionnalité améliore la gestion du catalogue et introduit une séparation entre les fonctionnalités client et administrateur.
+
+---
 
 ## 📜 Figure — Historique des commandes
 
@@ -180,7 +195,7 @@ Cette fonctionnalité permet au client de consulter les anciennes commandes et a
 ---
 
 
-un Rapport sur le projet disponible sur le page  suivant :https://extraordinary-tanuki-e213c7.netlify.app/
+un Rapport sur le projet disponible sur le page  suivant :https://benevolent-squirrel-63ea8d.netlify.app/
 
 
 ---
