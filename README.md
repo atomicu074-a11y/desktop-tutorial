@@ -148,7 +148,7 @@ Le programme calcule automatiquement :
 - la TVA,
 - le total TTC.
 ---
-## 🔐 Section Administration
+## 🔐Figure 4 — Section Administration
 
 <img width="619" height="394" alt="image" src="https://github.com/user-attachments/assets/a80730f6-baf0-46b2-811a-1632426f1014" />
 
@@ -164,7 +164,7 @@ Cette fonctionnalité améliore la gestion du catalogue et introduit une sépara
 
 ---
 
-## 📜 Figure — Historique des commandes
+## 📜 Figure 5 — Historique des commandes
 
 <img width="710" height="283" alt="Capture d&#39;écran 2026-05-13 010715" src="https://github.com/user-attachments/assets/00cf1d1b-d0f6-41e3-bddf-e5235779ea24" />
 
