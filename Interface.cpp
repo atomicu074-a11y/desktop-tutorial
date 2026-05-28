@@ -57,19 +57,25 @@ void Ui::lancer() {
     });
 
    // ajout d'un produit
-    auto btn_ajouter = Button("Ajouter au Panier", [&] {
-        try {
-            int qte = stoi(saisie_qte);
-            int id_prod = magasin_.produits()[produit_selectionne].id();
-            if(magasin_.ajouter_au_panier(client_.panier(), id_prod, qte, message_)) {
-                saisie_qte = "1"; 
-            }
-        } catch (...) { message_ = "⚠ Quantité invalide"; }
-    });
+  // CODE CORRIGÉ :
+auto btn_ajouter = Button("Ajouter au Panier", [&] {
+    try {
+        int qte = stoi(saisie_qte);
+        
+        // On bloque immédiatement si la quantité est négative ou nulle !
+        if (qte <= 0) {
+            message_ = "⚠ La quantité doit être supérieure à 0 !";
+            return;
+        }
 
-    // validation de la commande
-    auto btn_valider = Button("Valider Commande", [&] { action_valider_commande(); }
-);
+        int id_prod = magasin_.produits()[produit_selectionne].id();
+        if(magasin_.ajouter_au_panier(client_.panier(), id_prod, qte, message_)) {
+            saisie_qte = "1"; 
+        }
+    } catch (...) { 
+        message_ = "⚠ Erreur : veuillez saisir un nombre entier valide"; 
+    }
+});
 
     // informations du client
     auto vue_client = Renderer([&] {
@@ -274,11 +280,8 @@ Element Ui::render_panier() {
     message_ = "📦 Commande validée et enregistrée !";
 }
 void Ui::verifier_et_ajouter(const ProduitElectronique& nouveau_produit) { 
-    if (client_.role() == "Administrateur") {
-        magasin_.produits().push_back(nouveau_produit);
-        message_ = "💾 [Admin] Nouveau produit ajouté au catalogue avec succès !";
-    } else {
-        message_ = "⚠ Action refusée : Droits d'administrateur requis !";
+    magasin_.produits().push_back(nouveau_produit);
+    message_ = "💾 Nouveau produit ajouté au catalogue avec succès !";
     }
 }
 
