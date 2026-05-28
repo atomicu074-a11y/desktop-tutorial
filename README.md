@@ -98,7 +98,8 @@ make
 # 📖 Utilisation du programme
 ## 📷 Figure 1 — Menu principal
 
-<img width="497" height="249" alt="image" src="https://github.com/user-attachments/assets/48b85a17-40ad-4173-90d7-3dcbd8e2734e" />
+<img width="695" height="175" alt="image" src="https://github.com/user-attachments/assets/19d22beb-f23f-431e-ac10-53196de9d9b8" />
+
 
 
 Cette interface représente le menu principal de l’application e-commerce.
