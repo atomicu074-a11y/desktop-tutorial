@@ -38,6 +38,10 @@ const Produit* Magasin::trouver(int id) const {
 
 // sauvegarde des actions dans un fichier
 void Magasin::sauvegarder_journal(const std::string& log) {
+    // store in-memory for UI display
+    journal_.push_back(log);
+
+    // also append to the persistent journal file
     std::ofstream fichier("journal.txt", std::ios::app);
     if (fichier.is_open()) {
         fichier << log << std::endl;
@@ -58,6 +62,10 @@ void Panier::ajouter(int id, int q) {
 
 // ajout au panier avec vérification stock
 bool Magasin::ajouter_au_panier(Panier& panier, int id, int quantite, std::string& message) {
+    if (quantite <= 0) {
+        message = "⚠ Quantité invalide (doit être positive)";
+        return false;
+    }
     Produit* produit = trouver(id);
     if (!produit) {
         message = "⚠ produit introuvable";
