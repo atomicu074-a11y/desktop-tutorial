@@ -202,7 +202,7 @@ Cette fonctionnalité permet au client de consulter les anciennes commandes et a
 ---
 
 
-un Rapport sur le projet disponible sur le page  suivant :https://benevolent-squirrel-63ea8d.netlify.app/
+un Rapport sur le projet disponible sur le page  suivant :https://statuesque-madeleine-c942b3.netlify.app/
 
 
 ---
