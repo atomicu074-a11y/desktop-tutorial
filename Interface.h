@@ -27,7 +27,6 @@ void verifier_et_ajouter(const ProduitElectronique& nouveau_produit);
   Magasin magasin_;
     Client client_;
     std::string message_;
-    std::string saisie_nom_client = "";
 
     // Palette de couleurs complète
     ftxui::Color rose_, mauve_, bleu_doux_, vert_clair_;
