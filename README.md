@@ -98,11 +98,12 @@ make
 # 📖 Utilisation du programme
 ## 📷 Figure 1 — Menu principal
 
-<img width="695" height="175" alt="image" src="https://github.com/user-attachments/assets/19d22beb-f23f-431e-ac10-53196de9d9b8" />
+<img width="448" height="335" alt="image" src="https://github.com/user-attachments/assets/735dd981-9989-48ee-896b-e90ba966096a" />
 
 
 
-Cette interface représente le menu principal de l’application e-commerce.
+
+Cette interface représente le menu principal de l’application .
 La barre de navigation située à gauche permet d’accéder aux différentes sections du programme :
 - Client
 - Produits
@@ -151,10 +152,15 @@ Le programme calcule automatiquement :
 ---
 ## 🔐Figure 4 — Section Administration
 
-<img width="619" height="394" alt="image" src="https://github.com/user-attachments/assets/a80730f6-baf0-46b2-811a-1632426f1014" />
+<img width="737" height="323" alt="image" src="https://github.com/user-attachments/assets/79da7d2a-34fe-47be-9247-3fe61913c8f3" />
 
 
-Elle permet d’ajouter dynamiquement de nouveaux produits au catalogue grâce à un formulaire interactif développé avec FTXUI.
+Aprés ocnnecter a le mode L’administrateur par code :admin123  
+
+<img width="622" height="407" alt="image" src="https://github.com/user-attachments/assets/1dd3f39d-1601-4898-bc58-5ec5205f216d" />
+
+
+vous pouvez ajouter dynamiquement de nouveaux produits au catalogue grâce à un formulaire interactif développé avec FTXUI.
 
 L’administrateur peut saisir :
 - le nom du produit,
@@ -167,7 +173,7 @@ Cette fonctionnalité améliore la gestion du catalogue et introduit une sépara
 
 ## 📜 Figure 5 — Historique des commandes
 
-<img width="710" height="283" alt="Capture d&#39;écran 2026-05-13 010715" src="https://github.com/user-attachments/assets/00cf1d1b-d0f6-41e3-bddf-e5235779ea24" />
+<img width="639" height="491" alt="image" src="https://github.com/user-attachments/assets/49f7414d-ea41-4b05-97dd-bd091195455e" />
 
 
 Cette interface affiche l’historique des commandes effectuées par le client.
