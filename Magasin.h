@@ -149,11 +149,13 @@ public:
     bool ajouter_au_panier(Panier& p, int id, int q, std::string& msg);
     DetailPrix calculer_prix(const Panier& p) const;
     void sauvegarder_journal(const std::string& log);
+    const std::vector<std::string>& journal() const { return journal_; }
     void ajouter_nouveau_produit(const Produit& p) {
     produits_.push_back(p);
     }
 private:
     std::vector<Produit> produits_;
+    std::vector<std::string> journal_;
 };
 
 #endif
